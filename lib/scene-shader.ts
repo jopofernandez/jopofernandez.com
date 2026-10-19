@@ -127,7 +127,8 @@ export class SceneShader {
 
   resize() {
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = Math.round(innerWidth * this.dpr), h = Math.round(innerHeight * this.dpr);
+    // tamaño real del canvas en pantalla (en iOS 100vh no coincide con la altura visible mientras se ve la barra)
+    const w = Math.round((this.canvas.clientWidth || innerWidth) * this.dpr), h = Math.round((this.canvas.clientHeight || innerHeight) * this.dpr);
     if (this.canvas.width !== w || this.canvas.height !== h) { this.canvas.width = w; this.canvas.height = h; }
     this.gl.viewport(0, 0, w, h);
     this.draw();

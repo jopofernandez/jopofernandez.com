@@ -247,7 +247,9 @@ export class ChessScene {
    * i = -1 es la portada (escena completa); en cada sección la cámara se acerca un poco hacia la jugada.
    */
   camera(i: number, instant = false) {
-    const vw = innerWidth, vh = innerHeight;
+    // misma caja fija que el canvas del shader, para que piezas y dibujo midan igual
+    const box = this.els.stage.parentElement;
+    const vw = box?.clientWidth || innerWidth, vh = box?.clientHeight || innerHeight;
     const [W, H] = board.size;
     const cover = Math.max(vw / W, vh / H);
     // que el tablero (con las piezas de atrás) siempre entre entero; fuera de la imagen el shader funde con el papel
