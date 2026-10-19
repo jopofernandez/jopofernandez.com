@@ -34,8 +34,8 @@ function charAt(v: Voice, t: number, total: number) {
 }
 
 /**
- * "Sobre mí" escrito letra por letra, acompañando la lectura: avanza solo mientras la sección está en pantalla
- * y la línea que se está escribiendo se ve (si queda por debajo del borde, espera a que bajes).
+ * "Sobre mí" escrito letra por letra, acompañando la lectura: avanza solo mientras la línea que se está
+ * escribiendo se ve; si la card sale de pantalla, la escritura se frena y la voz se pausa.
  * Con la voz sonando, la escritura sigue a la voz: se apura si quedó atrás y espera si va adelantada.
  * La card crece a medida que se escribe, desde un alto mínimo intermedio. Los lectores de pantalla leen
  * el texto completo de una (copia oculta).
@@ -79,6 +79,19 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
     };
   }, [lang]);
 
+  // la escritura y la voz son de esta card: si deja de verse, la voz se pausa (la música y las piezas siguen)
+  const cardInView = () => {
+    const el = boxRef.current?.closest(".panel") ?? boxRef.current;
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    return r.top < innerHeight && r.bottom > 0;
+  };
+  useEffect(() => {
+    const check = () => { const a = audioRef.current; if (a && !a.paused && !cardInView()) a.pause(); };
+    addEventListener("scroll", check, { passive: true });
+    return () => removeEventListener("scroll", check);
+  }, []);
+
   const toggleVoice = () => {
     let a = audioRef.current;
     if (!a) {
@@ -111,12 +124,10 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
         if (nRef.current < total) timer = window.setTimeout(tick, d > 0 ? 25 : 60);
         return;
       }
+      // sin voz, escribe solo con la línea a la vista: si bajaste (o subiste) de más, espera; así la card no crece
+      // mientras estás mirando otra sección y la página no se corre
       const caret = caretRef.current?.getBoundingClientRect();
-      // si bajó más rápido de lo que se escribe (la línea quedó arriba de la pantalla), avance rápido hasta alcanzarlo
-      if (caret && caret.bottom < 0) { set(Math.min(total, nRef.current + 9)); if (nRef.current < total) timer = window.setTimeout(tick, 16); return; }
-      const box = boxRef.current!.getBoundingClientRect();
-      const inView = box.top < innerHeight && box.bottom > 0;
-      const visible = inView && !document.hidden && !document.documentElement.classList.contains("loading")
+      const visible = cardInView() && !document.hidden && !document.documentElement.classList.contains("loading")
         && (!caret || (caret.bottom < innerHeight - 24 && caret.top > 0));
       if (!visible) { timer = window.setTimeout(tick, 200); return; }
       const i = Math.min(total, nRef.current + 1);

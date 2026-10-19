@@ -161,7 +161,7 @@ const EN: Section[] = [
         links: [{ label: "Video", href: "https://youtu.be/8vIvJvBe_n4" }, { label: "Landing page", href: "https://www.linkedin.com/posts/ezequiel-fc_sigue-sorprendi%C3%A9ndome-las-cosas-que-se-pueden-ugcPost-7477379952296747009-8IOu/" }],
       },
       {
-        meta: "OneClick admin",
+        meta: "global.esur",
         title: "Radar",
         sum: "OneClick module to monitor activity and spot licensing opportunities.",
         links: [{ label: "Video (Spanish)", href: "https://youtu.be/dKOiN5cZ3JA" }],
@@ -196,7 +196,7 @@ const EN: Section[] = [
     name: "Contact",
     lede: "",
     cards: [
-      { meta: "Email", title: PROFILE.email, sum: "The fastest way to reach me.", href: `mailto:${PROFILE.email}` },
+      { meta: "Email", title: PROFILE.email, href: `mailto:${PROFILE.email}` },
       { meta: "Network", title: "LinkedIn", sum: "linkedin.com/in/ezequiel-fc", href: PROFILE.linkedin },
       { meta: "Social", title: "X", sum: "x.com/jopofernandez", href: PROFILE.x },
     ],
@@ -303,7 +303,7 @@ const ES: Section[] = [
         links: [{ label: "Video", href: "https://youtu.be/Vc5kOh0ZpA4" }, { label: "Landing web", href: "https://www.linkedin.com/posts/ezequiel-fc_sigue-sorprendi%C3%A9ndome-las-cosas-que-se-pueden-ugcPost-7477379952296747009-8IOu/" }],
       },
       {
-        meta: "Admin de OneClick",
+        meta: "global.esur",
         title: "Radar",
         sum: "Módulo de OneClick para monitorear la actividad y detectar oportunidades de licenciamiento.",
         links: [{ label: "Video", href: "https://youtu.be/dKOiN5cZ3JA" }],
@@ -338,7 +338,7 @@ const ES: Section[] = [
     name: "Contacto",
     lede: "",
     cards: [
-      { meta: "Email", title: PROFILE.email, sum: "La forma más rápida de contactarme.", href: `mailto:${PROFILE.email}` },
+      { meta: "Email", title: PROFILE.email, href: `mailto:${PROFILE.email}` },
       { meta: "Red", title: "LinkedIn", sum: "linkedin.com/in/ezequiel-fc", href: PROFILE.linkedin },
       { meta: "Redes", title: "X", sum: "x.com/jopofernandez", href: PROFILE.x },
     ],
