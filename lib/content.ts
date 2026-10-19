@@ -128,9 +128,6 @@ const EN: Section[] = [
           { title: "Product Strategy", meta: "Reforge" },
           { title: "Advanced Certification in Blockchain", meta: "ITBA · 2022" },
           { title: "UX/UI Design", meta: "Coderhouse · 2020" },
-          { title: "Design Thinking", meta: "BBVA · 2020" },
-          { title: "JavaScript Master: JS, jQuery, Angular 8, NodeJS", meta: "Udemy" },
-          { title: "IELTS General Training 7.5", meta: "IELTS Official" },
         ],
       },
     ],
@@ -144,7 +141,7 @@ const EN: Section[] = [
       {
         meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
         title: "Techess: a tournament for 30 players",
-        sum: "The fourth tournament I've organized, and the biggest so far. Put together with Crecimiento, with applied-AI workshops.",
+        sum: "The fourth tournament I've organized, and the biggest so far. Put together with Ain Ponce at Crecimiento, with applied-AI workshops.",
         href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
         photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
       },
@@ -165,13 +162,6 @@ const EN: Section[] = [
       },
       {
         meta: "OneClick admin",
-        title: "WIPO mediation module",
-        sum: "Bulk mediation requests to the WIPO Arbitration and Mediation Center, piloted with DNDA Argentina.",
-        more: ["Batch building in a Notion-style grid, review and approval", "Live tracking of every case sent"],
-        tags: ["UX", "Legal-tech"],
-      },
-      {
-        meta: "OneClick admin",
         title: "Radar",
         sum: "OneClick module to monitor activity and spot licensing opportunities.",
         links: [{ label: "Video (Spanish)", href: "https://youtu.be/dKOiN5cZ3JA" }],
@@ -189,7 +179,6 @@ const EN: Section[] = [
         more: [
           { label: "Attribution models: how they apply to copyright and related rights", href: insightEn("attribution-models-copyright") },
           { label: "GEMA launches PLAI, a first step in the right direction", href: insightEn("gema-plai-first-step-right-direction") },
-          { label: "CISAC’s centenary, between the GEMA-Suno lawsuit and the 1927 argument", href: insightEn("cisac-assembly-ai-copyright") },
           { label: "All insights", href: "https://globalesur.com/insights" },
         ],
         tags: ["Content", "Research", "CMOs"],
@@ -281,9 +270,6 @@ const ES: Section[] = [
           { title: "Product Strategy", meta: "Reforge" },
           { title: "Certificación Avanzada en Blockchain", meta: "ITBA · 2022" },
           { title: "Diseño UX/UI", meta: "Coderhouse · 2020" },
-          { title: "Design Thinking", meta: "BBVA · 2020" },
-          { title: "Master en JavaScript: Aprender JS, jQuery, Angular 8, NodeJS", meta: "Udemy" },
-          { title: "IELTS General Training 7.5", meta: "IELTS Official" },
         ],
       },
     ],
@@ -297,7 +283,7 @@ const ES: Section[] = [
       {
         meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
         title: "Techess: un torneo para 30 personas",
-        sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Crecimiento, con workshops de IA aplicada.",
+        sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Ain Ponce en Crecimiento, con workshops de IA aplicada.",
         href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
         photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
       },
@@ -318,13 +304,6 @@ const ES: Section[] = [
       },
       {
         meta: "Admin de OneClick",
-        title: "Módulo de mediación OMPI",
-        sum: "Solicitudes masivas de mediación al Centro de Arbitraje y Mediación de la OMPI, con piloto junto a la DNDA Argentina.",
-        more: ["Armado de lotes en una grilla estilo Notion, revisión y aprobación", "Seguimiento en vivo de cada caso enviado"],
-        tags: ["UX", "Legal-tech"],
-      },
-      {
-        meta: "Admin de OneClick",
         title: "Radar",
         sum: "Módulo de OneClick para monitorear la actividad y detectar oportunidades de licenciamiento.",
         links: [{ label: "Video", href: "https://youtu.be/dKOiN5cZ3JA" }],
@@ -342,7 +321,6 @@ const ES: Section[] = [
         more: [
           { label: "Modelos de atribución: usos en derechos de autor y conexos", href: insightEs("modelos-atribucion-derechos-autor") },
           { label: "GEMA lanza PLAI, un primer paso en la dirección correcta", href: insightEs("gema-plai-primer-paso-direccion-correcta") },
-          { label: "El centenario de CISAC, entre el litigio GEMA-Suno y el argumento de 1927", href: insightEs("asamblea-cisac-ia-derechos-autor") },
           { label: "Todos los insights", href: "https://globalesur.com/es/insights" },
         ],
         tags: ["Contenido", "Research", "Sociedades de gestión"],
