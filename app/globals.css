@@ -131,6 +131,19 @@ main { position: relative; z-index: 10; }
 @media (max-width: 640px) { .tm-map { aspect-ratio: 3 / 2; } .strip img { height: 104px; } }
 
 .row-wrap > .strip { padding: 0 0 14px; }
+/* links debajo de una card (videos, tiendas, posts) */
+.links { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 0 14px; }
+.links a { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 999px; font: 400 10.5px/1 var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; color: var(--ink); transition: border-color 0.2s; }
+.links a:hover { border-color: var(--ink); }
+.links a span { color: var(--accent-line); }
+/* ítems de una card (Formación) */
+.items { list-style: none; margin: 0; padding: 0 0 12px; }
+.items li { display: grid; gap: 2px; padding: 9px 0; border-top: 1px dashed var(--line); }
+.items li:first-child { border-top: 0; padding-top: 2px; }
+.items .it-title { font: 500 14.5px/1.35 var(--font-sans); letter-spacing: -0.005em; }
+.items .it-meta { font: 400 10.5px/1.45 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-mute); }
+.more li a { text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+.more li a:hover { border-color: var(--ink); }
 /* Ajedrez: stats de chess.com */
 .chesscom .stats { grid-column: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 10px 0 2px; }
 .chesscom .stat { padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; }

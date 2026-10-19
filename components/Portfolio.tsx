@@ -279,21 +279,7 @@ export default function Portfolio() {
               {s.cards.length > 0 && <div className="rows">
                 {s.cards.map((c, k) => {
                   if (c.chesscom) return <ChessCom key={k} c={c} lang={lang} />;
-                  const row = <Row key={k} c={c} open={!!open[`${i}-${k}`]} toggle={() => setOpen((o) => ({ ...o, [`${i}-${k}`]: !o[`${i}-${k}`] }))} />;
-                  if (!c.photos) return row;
-                  return (
-                    <div key={k} className="row-wrap">
-                      {row}
-                      <div className="strip">
-                        {c.photos.map((p, n) => (
-                          <a key={p.src} href={p.src} target="_blank" rel="noreferrer">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={p.thumb} width={p.w} height={p.h} alt={`${c.title} ${n + 1}`} loading="lazy" decoding="async" />
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  );
+                  return <Row key={k} c={c} open={!!open[`${i}-${k}`]} toggle={() => setOpen((o) => ({ ...o, [`${i}-${k}`]: !o[`${i}-${k}`] }))} />;
                 })}
               </div>}
               {s.id === "contact" && (
@@ -318,22 +304,49 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
     <>
       <span className="meta">{c.meta}</span>
       <span className="title">{c.title}</span>
-      <span className="sum">{c.sum}</span>
+      {c.sum && <span className="sum">{c.sum}</span>}
+    </>
+  );
+  // lo que va debajo de la card, siempre visible: ítems, links y fotos
+  const extras = (c.items || c.links || c.photos) && (
+    <>
+      {c.items && (
+        <ul className="items">
+          {c.items.map((it) => <li key={it.title}><span className="it-title">{it.title}</span><span className="it-meta">{it.meta}</span></li>)}
+        </ul>
+      )}
+      {c.links && (
+        <div className="links">
+          {c.links.map((l) => <a key={l.href} href={l.href} target="_blank" rel="noreferrer">{l.label} <span aria-hidden="true">↗</span></a>)}
+        </div>
+      )}
+      {c.photos && (
+        <div className="strip">
+          {c.photos.map((ph, n) => (
+            <a key={ph.src} href={ph.src} target="_blank" rel="noreferrer">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={ph.thumb} width={ph.w} height={ph.h} alt={`${c.title} ${n + 1}`} loading="lazy" decoding="async" />
+            </a>
+          ))}
+        </div>
+      )}
     </>
   );
   if (c.href) {
     const external = c.href.startsWith("http");
-    return (
+    const a = (
       <a className="row" href={c.href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
         {body}<span className="tog" aria-hidden="true">↗</span>
       </a>
     );
+    return extras ? <div className="row-wrap">{a}{extras}</div> : a;
   }
   const has = !!(c.more || c.tags);
-  if (!has) return <div className="row">{body}</div>;
+  if (!has) return extras ? <div className="row-wrap"><div className="row">{body}</div>{extras}</div> : <div className="row">{body}</div>;
   return (
     <div className="row-wrap" data-open={open}>
       <button className="row" aria-expanded={open} onClick={toggle}>{body}<span className="tog" aria-hidden="true">+</span></button>
+      {extras}
       <div className="more"><div>
         {c.more && <ul>{c.more.map((m) => typeof m === "string" ? <li key={m}>{m}</li> : <li key={m.href}><a href={m.href} target="_blank" rel="noreferrer">{m.label} ↗</a></li>)}</ul>}
         {c.tags && <div className="tags">{c.tags.map((t) => <span key={t}>{t}</span>)}</div>}

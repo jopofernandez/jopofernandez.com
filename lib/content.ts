@@ -8,7 +8,7 @@ export type Lang = "es" | "en";
 export type Card = {
   meta: string;
   title: string;
-  sum: string;
+  sum?: string;
   more?: (string | { label: string; href: string })[];
   tags?: string[];
   href?: string;
@@ -16,6 +16,10 @@ export type Card = {
   photos?: Photo[];
   /** card con las stats en vivo de chess.com */
   chesscom?: boolean;
+  /** links visibles debajo de la card (videos, tiendas, posts) */
+  links?: { label: string; href: string }[];
+  /** lista de ítems propios (ej. Formación: cada estudio con su institución) */
+  items?: { title: string; meta: string }[];
 };
 export type Photo = { src: string; thumb: string; w: number; h: number };
 export type Section = { id: string; name: string; lede: string; cards: Card[]; story?: string[] };
@@ -117,13 +121,16 @@ const EN: Section[] = [
         ],
       },
       {
-        meta: "Education · UADE",
-        title: "B.A. in Marketing",
-        sum: "2014 — 2018, with a university exchange at the Berlin School of Economics and Law (2017).",
-        more: [
-          "Reforge — Product Strategy",
-          "ITBA — Advanced Certification in Blockchain (2022)",
-          "Coderhouse — UX/UI Design (2020) · BBVA — Design Thinking (2020)",
+        meta: "Degree, courses and certifications",
+        title: "Education",
+        items: [
+          { title: "B.A. in Marketing", meta: "UADE · 2014 — 2018 · GPA 7.5 out of 10 · Exchange at the Berlin School of Economics and Law (2017)" },
+          { title: "Product Strategy", meta: "Reforge" },
+          { title: "Advanced Certification in Blockchain", meta: "ITBA · 2022" },
+          { title: "UX/UI Design", meta: "Coderhouse · 2020" },
+          { title: "Design Thinking", meta: "BBVA · 2020" },
+          { title: "JavaScript Master: JS, jQuery, Angular 8, NodeJS", meta: "Udemy" },
+          { title: "IELTS General Training 7.5", meta: "IELTS Official" },
         ],
       },
     ],
@@ -154,6 +161,7 @@ const EN: Section[] = [
         sum: "Self-service licensing for collective management organizations: a tool for long-tail licensing and a new digital channel for CMOs.",
         more: ["North Star: client collections", "Focus on monetization, onboarding and adoption across Latin America"],
         tags: ["Product strategy", "Growth", "LatAm"],
+        links: [{ label: "Video", href: "https://youtu.be/8vIvJvBe_n4" }, { label: "Landing page", href: "https://www.linkedin.com/posts/ezequiel-fc_sigue-sorprendi%C3%A9ndome-las-cosas-que-se-pueden-ugcPost-7477379952296747009-8IOu/" }],
       },
       {
         meta: "OneClick admin",
@@ -163,35 +171,28 @@ const EN: Section[] = [
         tags: ["UX", "Legal-tech"],
       },
       {
-        meta: "global.esur",
-        title: "Legacy CRM modernization",
-        sum: "Shaping the replacement of a 10+ year-old CRM to automate commercial data capture and improve decision-making.",
-        tags: ["Platform", "Data"],
+        meta: "OneClick admin",
+        title: "Radar",
+        sum: "OneClick module to monitor activity and spot licensing opportunities.",
+        links: [{ label: "Video (Spanish)", href: "https://youtu.be/dKOiN5cZ3JA" }],
+      },
+      {
+        meta: "global.esur · Mobile app",
+        title: "FIPCA Conecta",
+        sum: "An app for professionals in the Ibero-American audiovisual industry, on Android and iOS.",
+        links: [{ label: "LinkedIn post", href: "https://www.linkedin.com/posts/ezequiel-fc_mam%C3%A1-llegu%C3%A9-ayer-tuvimos-la-hermosa-ugcPost-7382051775283011584-ILT7/" }, { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.daniel.fernandez.globalesur.fipca&hl=es_AR" }, { label: "App Store", href: "https://apps.apple.com/us/app/fipca-conecta/id6740435537" }],
       },
       {
         meta: "global.esur · Insights",
         title: "Newsletter",
         sum: "Insights on technology and collective rights management, written for decision-makers at CMOs. 22 articles since January 2026, in English, Spanish and Portuguese.",
         more: [
-          { label: "The Challenge of Licensing the Long Tail", href: insightEn("long-tail-licensing-challenge") },
-          { label: "Sony and Universal vs. Suno, Round 2", href: insightEn("sony-universal-suno-second-lawsuit") },
-          { label: "AI in audiovisual, where do we stand?", href: insightEn("ai-in-audiovisual-where-we-stand") },
+          { label: "Attribution models: how they apply to copyright and related rights", href: insightEn("attribution-models-copyright") },
+          { label: "GEMA launches PLAI, a first step in the right direction", href: insightEn("gema-plai-first-step-right-direction") },
+          { label: "CISAC’s centenary, between the GEMA-Suno lawsuit and the 1927 argument", href: insightEn("cisac-assembly-ai-copyright") },
           { label: "All insights", href: "https://globalesur.com/insights" },
         ],
         tags: ["Content", "Research", "CMOs"],
-      },
-      {
-        meta: "AI agent",
-        title: "Newsletter Radar",
-        sum: "Research agent that scans sources on technology × collective rights management and sends a curated digest, with an approval dashboard.",
-        tags: ["AI agents", "Vercel", "Supabase"],
-      },
-      {
-        meta: "Side project",
-        title: "Over The Board",
-        sum: "Chess matching app to find nearby over-the-board opponents in Greater Buenos Aires.",
-        more: ["Geolocation search for opponents", "Telegram match notifications", "Chess.com and Lichess rating linking"],
-        tags: ["Next.js", ".NET", "Supabase"],
       },
     ],
   },
@@ -273,13 +274,16 @@ const ES: Section[] = [
         ],
       },
       {
-        meta: "Formación · UADE",
-        title: "Licenciatura en Marketing",
-        sum: "2014 — 2018, con un intercambio en la Berlin School of Economics and Law (2017).",
-        more: [
-          "Reforge — Product Strategy",
-          "ITBA — Certificación Avanzada en Blockchain (2022)",
-          "Coderhouse — Diseño UX/UI (2020) · BBVA — Design Thinking (2020)",
+        meta: "Carrera, cursos y certificaciones",
+        title: "Formación",
+        items: [
+          { title: "Licenciatura en Marketing", meta: "UADE · 2014 — 2018 · Promedio 7,5 sobre 10 · Intercambio en la Berlin School of Economics and Law (2017)" },
+          { title: "Product Strategy", meta: "Reforge" },
+          { title: "Certificación Avanzada en Blockchain", meta: "ITBA · 2022" },
+          { title: "Diseño UX/UI", meta: "Coderhouse · 2020" },
+          { title: "Design Thinking", meta: "BBVA · 2020" },
+          { title: "Master en JavaScript: Aprender JS, jQuery, Angular 8, NodeJS", meta: "Udemy" },
+          { title: "IELTS General Training 7.5", meta: "IELTS Official" },
         ],
       },
     ],
@@ -310,6 +314,7 @@ const ES: Section[] = [
         sum: "Licenciamiento autoservicio para sociedades de gestión colectiva: una herramienta para el long tail y un nuevo canal digital.",
         more: ["North Star: la recaudación de los clientes", "Foco en monetización, onboarding y adopción en Latinoamérica"],
         tags: ["Estrategia de producto", "Growth", "LatAm"],
+        links: [{ label: "Video", href: "https://youtu.be/Vc5kOh0ZpA4" }, { label: "Landing web", href: "https://www.linkedin.com/posts/ezequiel-fc_sigue-sorprendi%C3%A9ndome-las-cosas-que-se-pueden-ugcPost-7477379952296747009-8IOu/" }],
       },
       {
         meta: "Admin de OneClick",
@@ -319,35 +324,28 @@ const ES: Section[] = [
         tags: ["UX", "Legal-tech"],
       },
       {
-        meta: "global.esur",
-        title: "Modernización del CRM legacy",
-        sum: "Definición del reemplazo de un CRM de más de 10 años para automatizar la captura de datos comerciales y decidir mejor.",
-        tags: ["Plataforma", "Datos"],
+        meta: "Admin de OneClick",
+        title: "Radar",
+        sum: "Módulo de OneClick para monitorear la actividad y detectar oportunidades de licenciamiento.",
+        links: [{ label: "Video", href: "https://youtu.be/dKOiN5cZ3JA" }],
+      },
+      {
+        meta: "global.esur · App móvil",
+        title: "FIPCA Conecta",
+        sum: "App para profesionales de la industria audiovisual iberoamericana, en Android e iOS.",
+        links: [{ label: "Post en LinkedIn", href: "https://www.linkedin.com/posts/ezequiel-fc_mam%C3%A1-llegu%C3%A9-ayer-tuvimos-la-hermosa-ugcPost-7382051775283011584-ILT7/" }, { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.daniel.fernandez.globalesur.fipca&hl=es_AR" }, { label: "App Store", href: "https://apps.apple.com/us/app/fipca-conecta/id6740435537" }],
       },
       {
         meta: "global.esur · Insights",
         title: "Newsletter",
         sum: "Insights sobre tecnología y gestión colectiva de derechos, para quienes deciden en las sociedades de gestión. 22 artículos desde enero de 2026, en español, inglés y portugués.",
         more: [
-          { label: "El desafío del licenciamiento en el long tail", href: insightEs("desafio-licenciamiento-long-tail") },
-          { label: "Sony y Universal vs. Suno, round 2", href: insightEs("sony-universal-suno-segunda-demanda") },
-          { label: "IA en el audiovisual, ¿dónde estamos parados?", href: insightEs("ia-audiovisual-donde-estamos-parados") },
+          { label: "Modelos de atribución: usos en derechos de autor y conexos", href: insightEs("modelos-atribucion-derechos-autor") },
+          { label: "GEMA lanza PLAI, un primer paso en la dirección correcta", href: insightEs("gema-plai-primer-paso-direccion-correcta") },
+          { label: "El centenario de CISAC, entre el litigio GEMA-Suno y el argumento de 1927", href: insightEs("asamblea-cisac-ia-derechos-autor") },
           { label: "Todos los insights", href: "https://globalesur.com/es/insights" },
         ],
         tags: ["Contenido", "Research", "Sociedades de gestión"],
-      },
-      {
-        meta: "Agente de IA",
-        title: "Newsletter Radar",
-        sum: "Agente de research que monitorea fuentes sobre tecnología × gestión colectiva de derechos y envía un digest curado, con panel de aprobación.",
-        tags: ["Agentes de IA", "Vercel", "Supabase"],
-      },
-      {
-        meta: "Proyecto personal",
-        title: "Over The Board",
-        sum: "App para encontrar rivales de ajedrez presencial cerca, en el Gran Buenos Aires.",
-        more: ["Búsqueda de rivales por geolocalización", "Notificaciones de partidas por Telegram", "Vinculación de rating de Chess.com y Lichess"],
-        tags: ["Next.js", ".NET", "Supabase"],
       },
     ],
   },
