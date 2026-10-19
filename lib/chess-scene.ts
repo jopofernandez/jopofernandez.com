@@ -33,6 +33,8 @@ const HAND_SCALE = 0.62;
 const PINCH: Record<Side, [number, number]> = { black: [121, 765], white: [1195, 290] };
 const OFF: Record<Side, [number, number]> = { black: [700, -660], white: [-320, 800] };
 const LIFT = 40; // altura de levante (px de escena); el caballo salta un poco más
+// dónde aprieta cada bando la palanca del reloj (px de escena, medido sobre la ilustración): blancas a la izquierda
+const CLOCK_PRESS: Record<Side, [number, number]> = { white: [430, 297], black: [592, 259] };
 const ZOOM = [1, 1.02, 1.04, 1.01, 1.04, 1.03, 1.02, 1.05, 1.02];
 const NS = "http://www.w3.org/2000/svg";
 // peso sonoro por pieza: las más pesadas suenan más graves
@@ -64,7 +66,7 @@ export class ChessScene {
   private cam = { tx: 0, ty: 0, s: 1 };
   private camRaf = 0;
   /** sonido: se llama al levantar y al apoyar cada pieza (pan -1..1 según su x en el tablero; weight según la pieza) */
-  onSound?: (kind: "lift" | "place", info: { pan: number; weight: number }) => void;
+  onSound?: (kind: "lift" | "place" | "clock", info: { pan: number; weight: number }) => void;
 
   constructor(private els: SceneEls, initial: Palette = "green", private base = "/assets") {
     this.setPalette(initial);
@@ -136,8 +138,12 @@ export class ChessScene {
    * la mano llega en curva (no en línea recta), con un leve giro y un `dy` para el gesto de apretar/soltar.
    */
   private placeHand(side: Side, g: Geom, h: number, rot = 0, dy = 0) {
-    const el = this.els.hands[side], hm = HANDS[`hand-${side}`], s = HAND_SCALE * (g.k / K_REF);
-    const gx = g.left + g.w / 2, gy = g.top + g.h * 0.12 + dy;
+    this.placeHandAt(side, g.left + g.w / 2, g.top + g.h * 0.12 + dy, g.k, h, rot);
+  }
+
+  /** igual que placeHand, pero con los dedos en un punto cualquiera de la escena (para tocar el reloj) */
+  private placeHandAt(side: Side, gx: number, gy: number, k: number, h: number, rot = 0) {
+    const el = this.els.hands[side], hm = HANDS[`hand-${side}`], s = HAND_SCALE * (k / K_REF);
     const [ox, oy] = OFF[side], len = Math.hypot(ox, oy);
     const away = 1 - h, bulge = Math.sin(Math.PI * away) * 70; // desvío perpendicular de la trayectoria
     const px = (-oy / len) * bulge, py = (ox / len) * bulge;
@@ -166,11 +172,12 @@ export class ChessScene {
     delete this.position[from]; this.position[to] = p; this.render(p, ...sq(to));
   }
 
-  private async animateMove(from: string, to: string, speed = 1) {
+  /** @param press al terminar, la misma mano toca el reloj (y recién ahí cambia el turno). Devuelve si lo tocó. */
+  private async animateMove(from: string, to: string, speed = 1, press = false): Promise<boolean> {
     const p = this.position[from];
-    if (!p) return;
+    if (!p) return false;
     const soundInfo = (u: number, v: number) => ({ pan: P(u, v)[0] / 768 - 1, weight: WEIGHT[p.ch.toLowerCase()] ?? 1 });
-    if (this.reduce) { this.applyInstant(from, to); this.onSound?.("place", soundInfo(...sq(to))); return; }
+    if (this.reduce) { this.applyInstant(from, to); this.onSound?.("place", soundInfo(...sq(to))); return false; }
     const side: Side = p.ch === p.ch.toUpperCase() ? "white" : "black";
     const [fu, fv] = sq(from), [tu, tv] = sq(to);
     const dist = Math.hypot(tu - fu, tv - fv); // en casillas
@@ -183,18 +190,23 @@ export class ChessScene {
     const tr0 = lift0 + L * 0.45, tr1 = tr0 + travel;     // empieza a viajar mientras sube
     const D = ms(260), low0 = tr1 - D * 0.55;             // baja mientras termina de llegar
     const rel = low0 + D + ms(90);                        // apoya, suelta
-    const X = ms(560), end = rel + X;                     // la mano se retira
+    // con reloj: después de soltar, la mano viaja en arco a la palanca, aprieta (clac + cambio de turno) y se va
+    const C0 = rel + ms(40), CT = ms(620), C1 = C0 + CT;  // viaje al reloj
+    const PRESS = ms(200), click = C1 + ms(70);                // apretar
+    const X = ms(560), out0 = press ? C1 + PRESS : rel, end = out0 + X; // la mano se retira
     const liftH = LIFT + (knight ? 18 : 0) + Math.min(22, 5 * dist);
     const arc = 6 + 4 * dist + (knight ? 14 : 0);
     const dxScreen = P(tu, tv)[0] - P(fu, fv)[0];
     const swing = 7 * Math.max(-1, Math.min(1, dxScreen / 160)); // grados máximos de balanceo
     const pulse = (t: number, a: number, b: number) => { const q = clamp01((t - a) / (b - a)); return Math.sin(Math.PI * q) ** 2; };
-    let lifted = false, placed = false;
+    let lifted = false, placed = false, clicked = false;
+    const side0 = side;
+    const [kx, ky] = CLOCK_PRESS[side0], kClock = kAt(...sq("a8"));
     p.el.classList.add("moving");
     p.moving = true;
     const t0 = performance.now();
     for (;;) {
-      if (this.destroyed) return;
+      if (this.destroyed) return false;
       const t = performance.now() - t0;
       if (!lifted && t >= lift0) { lifted = true; this.onSound?.("lift", soundInfo(fu, fv)); }
       if (!placed && t >= low0 + D) { placed = true; this.onSound?.("place", soundInfo(tu, tv)); }
@@ -206,11 +218,19 @@ export class ChessScene {
       // péndulo: la pieza se atrasa al acelerar y se adelanta al frenar; amortiguado al apoyar
       const tilt = -smootherAcc(s) * swing * down;
       // presencia de la mano: alcance humano = jerk mínimo (acelera y frena suave, sin arranques bruscos)
-      const h = t < rel ? smoother(clamp01(t / A)) : 1 - smoother(clamp01((t - rel) / X));
+      const h = t < out0 ? smoother(clamp01(t / A)) : 1 - smoother(clamp01((t - out0) / X));
       // pequeño gesto de apretar al tomar y al apoyar
       const dy = 3 * pulse(t, A - ms(40), lift0 + ms(60)) + 3 * pulse(t, low0 + D * 0.6, rel);
       this.render(p, u, v, lift, tilt);
-      this.placeHand(side, p.g, h, tilt * 0.35, dy);
+      if (press && t >= C0) {
+        // de la cabeza de la pieza a la palanca, con una curva hacia arriba; al llegar baja un poco para apretar
+        const q = smoother(clamp01((t - C0) / CT));
+        const fx = p.g.left + p.g.w / 2, fy = p.g.top + p.g.h * 0.12;
+        const k = p.g.k + (kClock - p.g.k) * q;
+        const ax = fx + (kx - fx) * q, ay = fy + (ky - fy) * q - Math.sin(Math.PI * q) * 70 + 7 * pulse(t, C1 - ms(30), C1 + PRESS);
+        if (!clicked && t >= click) { clicked = true; this.onSound?.("clock", { pan: -0.4, weight: 1 }); this.onTurn?.(side0 === "white" ? "black" : "white"); }
+        this.placeHandAt(side, ax, ay, k, h, 0);
+      } else this.placeHand(side, p.g, h, tilt * 0.35, dy);
       if (t >= end) break;
       await frame();
     }
@@ -219,6 +239,7 @@ export class ChessScene {
     p.el.classList.remove("moving");
     delete this.position[from]; this.position[to] = p;
     this.render(p, tu, tv);
+    return clicked;
   }
 
   private async step(instant: boolean, speed = 1) {
@@ -226,13 +247,15 @@ export class ChessScene {
     const ply = fwd ? PLIES[this.ply + 1] : PLIES[this.ply];
     // hacia atrás se deshace en orden inverso (en el enroque: primero la torre, después el rey)
     const moves = fwd ? ply.moves : [...ply.moves].reverse().map(([a, b]) => [b, a] as [string, string]);
+    // hacia adelante y animada, la última pieza que se mueve (en el enroque, la torre) termina tocando el reloj
+    let pressed = false;
     for (const [i, [a, b]] of moves.entries()) {
       if (instant) this.applyInstant(a, b);
-      else await this.animateMove(a, b, i > 0 ? speed * 1.5 : speed);
+      else pressed = await this.animateMove(a, b, i > 0 ? speed * 1.5 : speed, fwd && i === moves.length - 1);
     }
     this.ply += fwd ? 1 : -1;
     this.onPly?.(this.ply);
-    this.onTurn?.(this.ply % 2 === 0 ? "black" : "white");
+    if (!pressed) this.onTurn?.(this.ply % 2 === 0 ? "black" : "white");
   }
 
   /** Lleva la partida a la posición de la sección `i`. Saltos largos: todo al instante menos la última jugada. */

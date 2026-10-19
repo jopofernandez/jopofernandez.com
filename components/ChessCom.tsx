@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Card, Lang } from "@/lib/content";
 import snapshot from "@/lib/data/chess-stats.json";
+import { IconArrow } from "./icons";
 
 type Stats = typeof snapshot;
 
@@ -57,7 +58,7 @@ export default function ChessCom({ c, lang }: { c: Card; lang: Lang }) {
           <span key={x.l} className="stat"><b>{x.v == null ? "-" : x.n ? nf.format(x.v) : x.v}</b><span>{x.l}</span></span>
         ))}
       </span>
-      <span className="tog" aria-hidden="true">↗</span>
+      <span className="tog" aria-hidden="true"><IconArrow /></span>
     </a>
   );
 }

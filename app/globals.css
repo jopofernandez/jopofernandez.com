@@ -163,11 +163,13 @@ html.light .tm-ph .duo { filter: url(#duo-light); }
 @media (max-width: 640px) { .strip img { height: 104px; } }
 
 .row-wrap > .strip { padding: 0 0 14px; }
+.row .tog .ic { display: block; }
 /* links debajo de una card (videos, tiendas, posts) */
 .links { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 0 14px; }
 .links a { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 999px; font: 400 10.5px/1 var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; text-decoration: none; color: var(--ink); transition: border-color 0.2s; }
 .links a:hover { border-color: var(--ink); }
-.links a span { color: var(--accent-line); }
+.links a .ic { color: var(--accent-line); }
+.more li a .ic { display: inline-block; margin-left: 2px; }
 /* ítems de una card (Formación) */
 .items { list-style: none; margin: 0; padding: 0 0 12px; }
 .items li { display: grid; gap: 2px; padding: 9px 0; border-top: 1px dashed var(--line); }

@@ -11,6 +11,7 @@ import TravelMap from "./TravelMap";
 import ChessCom from "./ChessCom";
 import Story from "./Story";
 import ChessClock from "./ChessClock";
+import { IconArrow, IconPlus } from "./icons";
 
 const MUTE_KEY = "pc-muted";
 const THEME_KEY = "pc-theme-v2";
@@ -45,6 +46,7 @@ export default function Portfolio() {
 
   const [active, setActive] = useState(-1); // -1 = portada
   const [turn, setTurn] = useState<Side>("white");
+  const [clockOn, setClockOn] = useState(false); // nadie corre hasta que las blancas juegan 1.c4 y tocan el reloj
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [muted, setMuted] = useState(false);
   const [reduce, setReduce] = useState(false);
@@ -75,7 +77,7 @@ export default function Portfolio() {
     } catch { /* sin WebGL: queda el papel liso y las piezas igual se ven */ }
     shaderRef.current = shader;
     scene.onCamera = (tx, ty, s) => shader?.setCamera(tx, ty, s);
-    scene.onTurn = setTurn;
+    scene.onTurn = (s) => { setTurn(s); setClockOn(true); };
 
     const sound = new ChessSound();
     soundRef.current = sound;
@@ -221,7 +223,7 @@ export default function Portfolio() {
       <div className="progress" style={{ transform: `scaleX(${(active + 1) / SECTION_IDS.length})` }} aria-hidden="true" />
       <div className="scene" aria-hidden="true">
         <div className="stage" ref={stageRef}>
-          <ChessClock turn={turn} paused={reduce} />
+          <ChessClock turn={turn} paused={reduce || !clockOn} />
           <div ref={layerRef} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="hand" ref={handBlackRef} alt="" />
@@ -318,7 +320,7 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
       )}
       {c.links && (
         <div className="links">
-          {c.links.map((l) => <a key={l.href} href={l.href} target="_blank" rel="noreferrer">{l.label} <span aria-hidden="true">↗</span></a>)}
+          {c.links.map((l) => <a key={l.href} href={l.href} target="_blank" rel="noreferrer">{l.label} <IconArrow size={9} /></a>)}
         </div>
       )}
       {c.photos && (
@@ -337,7 +339,7 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
     const external = c.href.startsWith("http");
     const a = (
       <a className="row" href={c.href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>
-        {body}<span className="tog" aria-hidden="true">↗</span>
+        {body}<span className="tog" aria-hidden="true"><IconArrow /></span>
       </a>
     );
     return extras ? <div className="row-wrap">{a}{extras}</div> : a;
@@ -346,18 +348,19 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
   if (!has) return extras ? <div className="row-wrap"><div className="row">{body}</div>{extras}</div> : <div className="row">{body}</div>;
   return (
     <div className="row-wrap" data-open={open}>
-      <button className="row" aria-expanded={open} onClick={toggle}>{body}<span className="tog" aria-hidden="true">+</span></button>
+      <button className="row" aria-expanded={open} onClick={toggle}>{body}<span className="tog" aria-hidden="true"><IconPlus /></span></button>
       {extras}
       <div className="more"><div>
-        {c.more && <ul>{c.more.map((m) => typeof m === "string" ? <li key={m}>{m}</li> : <li key={m.href}><a href={m.href} target="_blank" rel="noreferrer">{m.label} ↗</a></li>)}</ul>}
+        {c.more && <ul>{c.more.map((m) => typeof m === "string" ? <li key={m}>{m}</li> : <li key={m.href}><a href={m.href} target="_blank" rel="noreferrer">{m.label} <IconArrow size={9} /></a></li>)}</ul>}
         {c.tags && <div className="tags">{c.tags.map((t) => <span key={t}>{t}</span>)}</div>}
       </div></div>
     </div>
   );
 }
 
+// LinkedIn: las letras "in" solas (sin el cuadrado relleno), con el mismo peso visual que la X y el sobre
 const IconLinkedIn = () => (
-  <svg viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm3 7v8h2.5v-8H7Zm1.25-4a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM11 10v8h2.5v-4.2c0-1.1.6-1.8 1.5-1.8s1.5.6 1.5 1.8V18H19v-4.8c0-2.3-1.3-3.4-3-3.4-1.2 0-2 .5-2.5 1.2V10H11Z" /></svg>
+  <svg viewBox="0 0 24 24"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002ZM7 8.48H3V21h4V8.48Zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68Z" /></svg>
 );
 const IconX = () => (
   <svg viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.8L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L1.9 3h6.4l4.4 5.8L17.8 3Zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5Z" /></svg>
