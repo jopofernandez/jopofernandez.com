@@ -28,23 +28,23 @@ const insightEs = (slug: string) => `https://globalesur.com/es/insights/${slug}`
 export const UI = {
   es: {
     role: "Liderazgo de producto · Estrategia de producto · Productos digitales",
-    cue: "Bajá para hacer la primera jugada",
+    cue: "Bajá para seguir la partida",
     sections: "Secciones",
     themeToLight: "Cambiar a tema claro", themeToDark: "Cambiar a tema oscuro",
     soundOn: "Activar sonido", soundOff: "Silenciar",
     musicOn: "Poner música", musicOff: "Pausar música",
     langSwitch: "English", langCode: "EN",
-    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O",
+    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O d6",
   },
   en: {
     role: "Product Leadership · Product Strategy · Digital Products",
-    cue: "Scroll to play the first move",
+    cue: "Scroll to continue the game",
     sections: "Sections",
     themeToLight: "Switch to light theme", themeToDark: "Switch to dark theme",
     soundOn: "Turn sound on", soundOff: "Turn sound off",
     musicOn: "Play music", musicOff: "Pause music",
     langSwitch: "Español", langCode: "ES",
-    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O",
+    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O d6",
   },
 } as const;
 
@@ -551,5 +551,6 @@ export const PLIES: Ply[] = [
   { san: "Nf3", moves: [["g1", "f3"]] },
   { san: "O-O", moves: [["e8", "g8"], ["h8", "f8"]] },
   { san: "O-O", moves: [["e1", "g1"], ["h1", "f1"]] },
+  { san: "d6", moves: [["d7", "d6"]] },
 ];
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";

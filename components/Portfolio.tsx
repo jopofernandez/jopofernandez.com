@@ -9,9 +9,9 @@ import { PROFILE, SECTIONS, SECTION_IDS, UI, type Card, type Lang } from "@/lib/
 import board from "@/lib/data/board.json";
 
 const MUTE_KEY = "pc-muted";
-const THEME_KEY = "pc-theme";
+const THEME_KEY = "pc-theme-v2";
 const LANG_KEY = "pc-lang";
-const MUSIC_KEY = "pc-music";
+const MUSIC_KEY = "pc-music-v2";
 /** idioma: lo elegido antes; si no, el del navegador (inglés solo si el navegador está en inglés); por defecto español */
 const detectLang = (): Lang => {
   try { const s = localStorage.getItem(LANG_KEY); if (s === "es" || s === "en") return s; } catch {}
@@ -43,7 +43,7 @@ export default function Portfolio() {
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [muted, setMuted] = useState(false);
   const [reduce, setReduce] = useState(false);
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const [lang, setLang] = useState<Lang>("es");
   const [hasMusic, setHasMusic] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
@@ -79,12 +79,16 @@ export default function Portfolio() {
     scene.onSound = (kind, info) => sound.play(kind, info);
     const music = new Music();
     musicRef.current = music;
-    let wantsMusic = false;
-    try { wantsMusic = localStorage.getItem(MUSIC_KEY) === "1"; } catch {}
+    // encendida por defecto: los navegadores no dejan sonar audio sin interacción, así que arranca con el primer toque o tecla
+    let wantsMusic = true;
+    try { wantsMusic = localStorage.getItem(MUSIC_KEY) !== "0"; } catch {}
     fetch(MUSIC_SRC, { method: "HEAD" }).then((r) => setHasMusic(r.ok)).catch(() => {});
-    const unlock = () => {
+    const unlock = (e: Event) => {
       sound.unlock();
-      if (wantsMusic) { wantsMusic = false; void music.play().then(() => setMusicOn(music.playing)); }
+      // si el primer toque es el propio botón de música, que decida el botón (si no, se prende y se apaga en el mismo click)
+      const onMusicBtn = (e.target as Element | null)?.closest?.("[data-music]");
+      if (wantsMusic && !onMusicBtn) void music.play().then(() => setMusicOn(music.playing));
+      wantsMusic = false;
     };
     addEventListener("pointerdown", unlock);
     addEventListener("keydown", unlock);
@@ -122,7 +126,8 @@ export default function Portfolio() {
         activeRef.current = i;
         setActive(i);
         const scene = sceneRef.current;
-        if (scene) { scene.camera(i); scene.goTo(i); }
+        // la portada juega 1.c4 apenas carga; cada sección, la jugada siguiente
+        if (scene) { scene.camera(i); scene.goTo(i + 1); }
         history.replaceState(null, "", `${location.pathname}${location.search}${i < 0 ? "" : `#${SECTION_IDS[i]}`}`);
       }
     };
@@ -132,7 +137,7 @@ export default function Portfolio() {
     const start = SECTION_IDS.findIndex((id) => `#${id}` === location.hash);
     if (start >= 0) {
       const scene = sceneRef.current;
-      if (scene && start > 0) scene.goTo(start - 1, { instant: true });
+      if (scene) scene.goTo(start, { instant: true });
       document.getElementById(SECTION_IDS[start])?.scrollIntoView({ block: "center" });
     }
     const t = setTimeout(check, 400);
@@ -166,6 +171,7 @@ export default function Portfolio() {
     document.documentElement.classList.toggle("light", next === "light");
     shaderRef.current?.setColors(THEMES[next].ink, THEMES[next].paper);
     sceneRef.current?.setPalette(next === "dark" ? "dark" : "green");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEMES[next].paper);
     try { localStorage.setItem(THEME_KEY, next); } catch {}
   };
 
@@ -224,7 +230,7 @@ export default function Portfolio() {
           {theme === "dark" ? <IconSun /> : <IconMoon />}
         </button>
         {hasMusic && (
-          <button className="ico" onClick={toggleMusic} aria-pressed={musicOn} aria-label={musicOn ? t.musicOff : t.musicOn} title={musicOn ? t.musicOff : t.musicOn}>
+          <button className="ico" data-music onClick={toggleMusic} aria-pressed={musicOn} aria-label={musicOn ? t.musicOff : t.musicOn} title={musicOn ? t.musicOff : t.musicOn}>
             <IconMusic />
           </button>
         )}

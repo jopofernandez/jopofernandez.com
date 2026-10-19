@@ -260,7 +260,8 @@ export class ChessScene {
     const c = P(4, 4);
     let fx = c[0], fy = c[1] - 40;
     if (i >= 0) {
-      const [from, to] = PLIES[i].moves[0];
+      // la sección i juega la jugada i + 1 (la 1.c4 se juega sola en la portada)
+      const [from, to] = PLIES[i + 1].moves[0];
       const [mu, mv] = sq(from), [nu, nv] = sq(to);
       const mid = P((mu + nu) / 2, (mv + nv) / 2);
       fx += (mid[0] - fx) * 0.3; fy += (mid[1] - fy) * 0.3;

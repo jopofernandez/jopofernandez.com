@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   title: "Ezequiel Fernández — Liderazgo de producto",
   description: "Líder de producto en Buenos Aires. Estrategia de producto, productos digitales y desarrollo de negocio en Latinoamérica.",
 };
-export const viewport: Viewport = { themeColor: "#0f1c17" };
+export const viewport: Viewport = { themeColor: "#eee9dc" };
 
-// Oscuro por defecto. Si el visitante eligió claro, se aplica antes de pintar (sin destello).
-const THEME_SCRIPT = `try{if(localStorage.getItem("pc-theme")==="light")document.documentElement.classList.add("light")}catch(e){}`;
+// Claro por defecto. Si el visitante eligió oscuro, se aplica antes de pintar (sin destello).
+const THEME_SCRIPT = `try{if(localStorage.getItem("pc-theme-v2")==="dark"){document.documentElement.classList.remove("light");document.querySelector('meta[name="theme-color"]')?.setAttribute("content","#0f1c17")}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="es" className={`light ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
