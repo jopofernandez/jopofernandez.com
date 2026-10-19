@@ -7,6 +7,7 @@ import { Music, MUSIC_SRC } from "@/lib/music";
 import { SceneShader } from "@/lib/scene-shader";
 import { PROFILE, SECTIONS, SECTION_IDS, UI, type Card, type Lang } from "@/lib/content";
 import board from "@/lib/data/board.json";
+import TravelMap from "./TravelMap";
 
 const MUTE_KEY = "pc-muted";
 const THEME_KEY = "pc-theme-v2";
@@ -268,11 +269,12 @@ export default function Portfolio() {
               {s.id === "contact" && <span className="mark" aria-hidden="true" />}
               <h2>{s.name}</h2>
               <p className="lede">{s.lede}</p>
-              <div className="rows">
+              {s.id === "travel" && <TravelMap lang={lang} />}
+              {s.cards.length > 0 && <div className="rows">
                 {s.cards.map((c, k) => (
                   <Row key={k} c={c} open={!!open[`${i}-${k}`]} toggle={() => setOpen((o) => ({ ...o, [`${i}-${k}`]: !o[`${i}-${k}`] }))} />
                 ))}
-              </div>
+              </div>}
               {s.id === "contact" && (
                 <div className="social">
                   <a href={PROFILE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn"><IconLinkedIn /></a>

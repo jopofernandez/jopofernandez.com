@@ -187,26 +187,10 @@ const EN: Section[] = [
     ],
   },
   {
-    id: "beyond",
-    name: "Beyond Work",
-    lede: "What keeps me curious outside the roadmap.",
-    cards: [
-      {
-        meta: "Berlin · 2017",
-        title: "A semester abroad",
-        sum: "University exchange at the Berlin School of Economics and Law: strategic management, English for business and some German.",
-      },
-      {
-        meta: "Learning",
-        title: "Always one course in progress",
-        sum: "From product strategy to UX/UI, design thinking, JavaScript and blockchain.",
-      },
-      {
-        meta: "Over the board",
-        title: "Chess",
-        sum: "The game behind this site, and behind a side project to find opponents nearby.",
-      },
-    ],
+    id: "travel",
+    name: "Travel",
+    lede: "Places that shaped how I see things.",
+    cards: [],
   },
   {
     id: "stack",
@@ -430,26 +414,10 @@ const ES: Section[] = [
     ],
   },
   {
-    id: "beyond",
-    name: "Fuera del trabajo",
-    lede: "Lo que me mantiene curioso fuera del roadmap.",
-    cards: [
-      {
-        meta: "Berlín · 2017",
-        title: "Un semestre afuera",
-        sum: "Intercambio en la Berlin School of Economics and Law: management estratégico, inglés de negocios y algo de alemán.",
-      },
-      {
-        meta: "Aprendizaje",
-        title: "Siempre con un curso en marcha",
-        sum: "De estrategia de producto a UX/UI, design thinking, JavaScript y blockchain.",
-      },
-      {
-        meta: "Sobre el tablero",
-        title: "Ajedrez",
-        sum: "El juego detrás de este sitio, y de un proyecto personal para encontrar rivales cerca.",
-      },
-    ],
+    id: "travel",
+    name: "Viajes",
+    lede: "Lugares que me cambiaron la forma de ver las cosas.",
+    cards: [],
   },
   {
     id: "stack",
