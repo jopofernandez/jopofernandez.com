@@ -212,8 +212,10 @@ html.light .tm-ph .duo { filter: url(#duo-light); }
 @media (max-width: 640px) { .mark { top: 24px; right: 22px; width: 44px; } }
 .panel h2 { margin: 0; font: 500 34px/1.05 var(--font-sans); letter-spacing: -0.03em; }
 .lede { margin: 10px 0 18px; font-size: 15.5px; line-height: 1.5; color: var(--ink-soft); }
-.rows { border-top: 1px solid var(--line); }
+/* líneas solo entre ítems: ni pegada al título ni debajo del último */
+.rows { margin-top: 8px; }
 .row-wrap, .rows > .row { border-bottom: 1px solid var(--line); }
+.rows > :last-child { border-bottom: 0; }
 .row {
   display: grid; grid-template-columns: 1fr auto; column-gap: 16px; width: 100%;
   padding: 13px 2px 12px; text-align: left; text-decoration: none; color: inherit;
