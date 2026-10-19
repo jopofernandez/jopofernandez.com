@@ -125,10 +125,18 @@ main { position: relative; z-index: 10; }
 .tm-head .title { font: 500 17px/1.2 var(--font-sans); letter-spacing: -0.01em; }
 .tm-head .meta { font: 400 11px/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); text-align: right; }
 .tm-hint { margin: 0; font: 400 12px/1.4 var(--font-mono); color: var(--ink-mute); letter-spacing: 0.02em; }
-.tm-strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin; }
-.tm-strip a { flex: none; scroll-snap-align: start; }
-.tm-strip img { display: block; height: 120px; width: auto; border-radius: 10px; border: 1px solid var(--line); }
-@media (max-width: 640px) { .tm-map { aspect-ratio: 3 / 2; } .tm-strip img { height: 104px; } }
+.strip { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; scrollbar-width: thin; }
+.strip a { flex: none; scroll-snap-align: start; }
+.strip img { display: block; height: 120px; width: auto; border-radius: 10px; border: 1px solid var(--line); }
+@media (max-width: 640px) { .tm-map { aspect-ratio: 3 / 2; } .strip img { height: 104px; } }
+
+.row-wrap > .strip { padding: 0 0 14px; }
+/* Ajedrez: stats de chess.com */
+.chesscom .stats { grid-column: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 10px 0 2px; }
+.chesscom .stat { padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; }
+.chesscom .stat b { display: block; font: 500 20px/1.1 var(--font-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.chesscom .stat span { display: block; margin-top: 3px; font: 400 10px/1.3 var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); }
+@media (max-width: 640px) { .chesscom .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* logo JF (Contacto): una máscara pintada con la tinta del tema, así sirve igual en claro y en oscuro */
 .mark { position: absolute; top: 30px; right: 32px; width: 52px; aspect-ratio: 462 / 263; background: var(--ink); -webkit-mask: url(/assets/logo/jf.png) center / contain no-repeat; mask: url(/assets/logo/jf.png) center / contain no-repeat; }

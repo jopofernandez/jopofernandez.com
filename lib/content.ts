@@ -10,7 +10,12 @@ export type Card = {
   more?: string[];
   tags?: string[];
   href?: string;
+  /** fotos que se muestran en una tira debajo de la card */
+  photos?: Photo[];
+  /** card con las stats en vivo de chess.com */
+  chesscom?: boolean;
 };
+export type Photo = { src: string; thumb: string; w: number; h: number };
 export type Section = { id: string; name: string; lede: string; cards: Card[] };
 
 export const PROFILE = {
@@ -208,16 +213,13 @@ const EN: Section[] = [
     name: "Chess",
     lede: "Where the strategy habit comes from.",
     cards: [
+      { meta: "Chess.com · lajopeta", title: "My online chess", sum: "Current ratings and games played since I started.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
       {
-        meta: "This page",
-        title: "A real game in the background",
-        sum: "Each section plays one move of an English Opening against a King's Indian setup.",
-        more: ["1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O", "Go back and the moves are taken back"],
-      },
-      {
-        meta: "Building for players",
-        title: "Over The Board",
-        sum: "An app to turn online interest into in-person games: nearby opponents of similar strength, linked to Chess.com and Lichess ratings.",
+        meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
+        title: "Techess: a tournament for 30 players",
+        sum: "The fourth tournament I've organized, and the biggest so far. Put together with Crecimiento, with applied-AI workshops.",
+        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
+        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
       },
     ],
   },
@@ -435,16 +437,13 @@ const ES: Section[] = [
     name: "Ajedrez",
     lede: "De dónde viene el hábito de pensar en estrategia.",
     cards: [
+      { meta: "Chess.com · lajopeta", title: "Mi ajedrez online", sum: "Rating actual y partidas jugadas desde que empecé.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
       {
-        meta: "Este sitio",
-        title: "Una partida real de fondo",
-        sum: "Cada sección juega una jugada de una Apertura Inglesa contra un esquema de India de Rey.",
-        more: ["1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O", "Si volvés atrás, las jugadas se deshacen"],
-      },
-      {
-        meta: "Construyendo para jugadores",
-        title: "Over The Board",
-        sum: "Una app para pasar del interés online a partidas en persona: rivales cerca y de nivel parecido, con el rating de Chess.com y Lichess.",
+        meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
+        title: "Techess: un torneo para 30 personas",
+        sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Crecimiento, con workshops de IA aplicada.",
+        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
+        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
       },
     ],
   },

@@ -8,6 +8,7 @@ import { SceneShader } from "@/lib/scene-shader";
 import { PROFILE, SECTIONS, SECTION_IDS, UI, type Card, type Lang } from "@/lib/content";
 import board from "@/lib/data/board.json";
 import TravelMap from "./TravelMap";
+import ChessCom from "./ChessCom";
 
 const MUTE_KEY = "pc-muted";
 const THEME_KEY = "pc-theme-v2";
@@ -271,9 +272,24 @@ export default function Portfolio() {
               <p className="lede">{s.lede}</p>
               {s.id === "travel" && <TravelMap lang={lang} />}
               {s.cards.length > 0 && <div className="rows">
-                {s.cards.map((c, k) => (
-                  <Row key={k} c={c} open={!!open[`${i}-${k}`]} toggle={() => setOpen((o) => ({ ...o, [`${i}-${k}`]: !o[`${i}-${k}`] }))} />
-                ))}
+                {s.cards.map((c, k) => {
+                  if (c.chesscom) return <ChessCom key={k} c={c} lang={lang} />;
+                  const row = <Row key={k} c={c} open={!!open[`${i}-${k}`]} toggle={() => setOpen((o) => ({ ...o, [`${i}-${k}`]: !o[`${i}-${k}`] }))} />;
+                  if (!c.photos) return row;
+                  return (
+                    <div key={k} className="row-wrap">
+                      {row}
+                      <div className="strip">
+                        {c.photos.map((p, n) => (
+                          <a key={p.src} href={p.src} target="_blank" rel="noreferrer">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={p.thumb} width={p.w} height={p.h} alt={`${c.title} ${n + 1}`} loading="lazy" decoding="async" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>}
               {s.id === "contact" && (
                 <div className="social">

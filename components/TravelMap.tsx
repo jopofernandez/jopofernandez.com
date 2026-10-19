@@ -216,7 +216,7 @@ export default function TravelMap({ lang }: { lang: Lang }) {
               <span className="meta">{sel.country[lang]}{sel.years ? ` · ${sel.years.join(", ")}` : ""}</span>
             </div>
             {photos.length ? (
-              <div className="tm-strip">
+              <div className="strip">
                 {photos.map((p, i) => (
                   <a key={p.src} href={p.src} target="_blank" rel="noreferrer">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
