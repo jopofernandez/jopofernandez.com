@@ -37,6 +37,9 @@ body {
 }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 a { color: inherit; }
+/* texto seleccionado: lima con tinta oscura en el tema oscuro; casi negro con texto papel en el claro */
+::selection { background: #c6f24e; color: #0f1c17; }
+html.light ::selection { background: #0f1c17; color: #eee9dc; }
 :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
 
 /* Hasta que la escena está lista no se muestra nada: shader, piezas, reloj y textos aparecen juntos */
