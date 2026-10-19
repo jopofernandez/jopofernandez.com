@@ -35,8 +35,8 @@ function charAt(v: Voice, t: number, total: number) {
  * "Sobre mí" escrito letra por letra, acompañando la lectura: avanza solo mientras la sección está en pantalla
  * y la línea que se está escribiendo se ve (si queda por debajo del borde, espera a que bajes).
  * Con la voz sonando, la escritura sigue a la voz: se apura si quedó atrás y espera si va adelantada.
- * El texto completo está siempre en el DOM (lo que falta, transparente), así la card no cambia de alto,
- * y los lectores de pantalla leen todo de una.
+ * La card crece a medida que se escribe, desde un alto mínimo intermedio. Los lectores de pantalla leen
+ * el texto completo de una (copia oculta).
  */
 export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang: Lang }) {
   const t = TXT[lang];
@@ -124,16 +124,17 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
         {voice === "playing" ? <span className="eq" aria-hidden="true"><i /><i /><i /></span> : <IconVoice />}
         {voice === "playing" ? t.pause : voice === "paused" ? t.resume : t.listen}
       </button>
-      <div aria-hidden="true">
+      {/* solo lo ya escrito ocupa lugar: la card crece con el texto (desde un alto mínimo, en CSS) */}
+      <div className="story-text" aria-hidden="true">
         {paragraphs.map((p, k) => {
           const shown = Math.max(0, Math.min(p.length, n - offset));
           const active = !done && n >= offset && shown < p.length;
           offset += p.length;
+          if (!shown && !active) return null;
           return (
             <p key={k}>
               {p.slice(0, shown)}
               {active && <span className="caret" ref={caretRef} />}
-              <span className="ghost">{p.slice(shown)}</span>
             </p>
           );
         })}

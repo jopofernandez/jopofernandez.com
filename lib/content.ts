@@ -72,7 +72,7 @@ const EN: Section[] = [
   {
     id: "experience",
     name: "Experience",
-    lede: "Over a decade across banking, fintech and B2B software, from analyst to CEO.",
+    lede: "",
     cards: [
       {
         meta: "global.esur · Oct 2026 — Present",
@@ -135,12 +135,12 @@ const EN: Section[] = [
   {
     id: "chess",
     name: "Chess",
-    lede: "Where the strategy habit comes from.",
+    lede: "",
     cards: [
       { meta: "Chess.com · lajopeta", title: "My online chess", sum: "Current ratings and games played since I started.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
       {
         meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess: a tournament for 30 players",
+        title: "Techess: an event for 30 people",
         sum: "The fourth tournament I've organized, and the biggest so far. Put together with Ain Ponce at Crecimiento, with applied-AI workshops.",
         href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
         photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
@@ -150,7 +150,7 @@ const EN: Section[] = [
   {
     id: "projects",
     name: "Projects",
-    lede: "Products built, problems solved, decisions taken.",
+    lede: "",
     cards: [
       {
         meta: "global.esur",
@@ -188,13 +188,13 @@ const EN: Section[] = [
   {
     id: "travel",
     name: "Travel",
-    lede: "Places that shaped how I see things.",
+    lede: "",
     cards: [],
   },
   {
     id: "contact",
     name: "Contact",
-    lede: "Your move.",
+    lede: "",
     cards: [
       { meta: "Email", title: PROFILE.email, sum: "The fastest way to reach me.", href: `mailto:${PROFILE.email}` },
       { meta: "Network", title: "LinkedIn", sum: "linkedin.com/in/ezequiel-fc", href: PROFILE.linkedin },
@@ -214,7 +214,7 @@ const ES: Section[] = [
   {
     id: "experience",
     name: "Experiencia",
-    lede: "Más de diez años entre banca, fintech y software B2B, de analista a CEO.",
+    lede: "",
     cards: [
       {
         meta: "global.esur · Oct 2026 — Actualidad",
@@ -277,12 +277,12 @@ const ES: Section[] = [
   {
     id: "chess",
     name: "Ajedrez",
-    lede: "De dónde viene el hábito de pensar en estrategia.",
+    lede: "",
     cards: [
       { meta: "Chess.com · lajopeta", title: "Mi ajedrez online", sum: "Rating actual y partidas jugadas desde que empecé.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
       {
         meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess: un torneo para 30 personas",
+        title: "Techess: un evento para 30 personas",
         sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Ain Ponce en Crecimiento, con workshops de IA aplicada.",
         href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
         photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
@@ -292,7 +292,7 @@ const ES: Section[] = [
   {
     id: "projects",
     name: "Proyectos",
-    lede: "Productos construidos, problemas resueltos, decisiones tomadas.",
+    lede: "",
     cards: [
       {
         meta: "global.esur",
@@ -330,13 +330,13 @@ const ES: Section[] = [
   {
     id: "travel",
     name: "Viajes",
-    lede: "Lugares que me cambiaron la forma de ver las cosas.",
+    lede: "",
     cards: [],
   },
   {
     id: "contact",
     name: "Contacto",
-    lede: "Tu jugada.",
+    lede: "",
     cards: [
       { meta: "Email", title: PROFILE.email, sum: "La forma más rápida de contactarme.", href: `mailto:${PROFILE.email}` },
       { meta: "Red", title: "LinkedIn", sum: "linkedin.com/in/ezequiel-fc", href: PROFILE.linkedin },

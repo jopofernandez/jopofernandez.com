@@ -32,13 +32,20 @@ const TXT = {
   en: { map: "Travel map", open: (n: number) => (n === 1 ? "See the photo" : `See ${n} photos`), close: "Close", prev: "Previous", next: "Next" },
 };
 
-/** encuadre con los lugares que tienen foto, con margen para las miniaturas */
-function fit(w: number, h: number): View {
-  const pts = (SHOTS.length ? SHOTS.map((s) => s.place) : PLACES).map(proj);
+/** encuadre de un conjunto de puntos, con margen para las miniaturas */
+function frame(pts: { x: number; y: number }[], w: number, h: number): View {
   const x0 = Math.min(...pts.map((p) => p.x)), x1 = Math.max(...pts.map((p) => p.x));
   const y0 = Math.min(...pts.map((p) => p.y)), y1 = Math.max(...pts.map((p) => p.y));
-  const k = Math.min((w * 0.8) / (x1 - x0), (h * 0.74) / (y1 - y0));
+  const k = Math.min((w * 0.8) / Math.max(x1 - x0, 1), (h * 0.74) / Math.max(y1 - y0, 1));
   return { x: (x0 + x1) / 2, y: (y0 + y1) / 2, k };
+}
+
+/** encuadre: los lugares con foto, más los lugares sin foto que entran sin achicar el mapa más de un 10% */
+function fit(w: number, h: number): View {
+  const pts = (SHOTS.length ? SHOTS.map((s) => s.place) : PLACES).map(proj);
+  const base = frame(pts, w, h).k;
+  for (const p of BARE) { const q = proj(p); if (frame([...pts, q], w, h).k >= base * 0.9) pts.push(q); }
+  return frame(pts, w, h);
 }
 
 /** agrupa las fotos que en pantalla quedarían encimadas (como el mapa de Fotos) */
@@ -139,7 +146,8 @@ export default function TravelMap({ lang }: { lang: Lang }) {
       </svg>
       <div className="tm-map" ref={boxRef} role="group" aria-label={t.map}>
         <canvas ref={canvasRef} aria-hidden="true" />
-        {bare.map((b) => <i key={b.id} className="tm-dot" style={{ transform: `translate(${b.x}px, ${b.y}px)` }} />)}
+        {/* lugares sin foto: aro de tinta con centro lima y un pulso suave, desfasado entre uno y otro */}
+        {bare.map((b, k) => <i key={b.id} className="tm-dot" style={{ transform: `translate(${b.x}px, ${b.y}px)`, ["--d" as string]: `${-((k * 0.61) % 1) * 3.2}s` }} />)}
         {groups.map((g) => (
           <button
             key={g.key}
