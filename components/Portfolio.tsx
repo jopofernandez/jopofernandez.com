@@ -265,6 +265,7 @@ export default function Portfolio() {
         {sections.map((s, i) => (
           <section key={s.id} id={s.id} className="block" data-i={i}>
             <div className="panel">
+              {s.id === "contact" && <span className="mark" aria-hidden="true" />}
               <h2>{s.name}</h2>
               <p className="lede">{s.lede}</p>
               <div className="rows">

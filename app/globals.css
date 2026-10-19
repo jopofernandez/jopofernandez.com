@@ -101,7 +101,11 @@ main { position: relative; z-index: 10; }
   border-radius: 18px;
   padding: 30px 32px 24px;
   box-shadow: var(--shadow);
+  position: relative;
 }
+/* logo JF (Contacto): una máscara pintada con la tinta del tema, así sirve igual en claro y en oscuro */
+.mark { position: absolute; top: 30px; right: 32px; width: 52px; aspect-ratio: 462 / 263; background: var(--ink); -webkit-mask: url(/assets/logo/jf.png) center / contain no-repeat; mask: url(/assets/logo/jf.png) center / contain no-repeat; }
+@media (max-width: 640px) { .mark { top: 24px; right: 22px; width: 44px; } }
 .panel h2 { margin: 0; font: 500 34px/1.05 var(--font-sans); letter-spacing: -0.03em; }
 .lede { margin: 10px 0 18px; font-size: 15.5px; line-height: 1.5; color: var(--ink-soft); }
 .rows { border-top: 1px solid var(--line); }

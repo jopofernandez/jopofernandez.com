@@ -16,6 +16,14 @@ export const metadata: Metadata = {
   applicationName: TITLE,
   authors: [{ name: "Ezequiel \"Jopo\" Fernández", url: "https://jopofernandez.com" }],
   alternates: { canonical: "/" },
+  // logo JF: negro en pestañas claras, blanco en pestañas oscuras (sigue el tema del navegador)
+  icons: {
+    icon: [
+      { url: "/icon-light.png", type: "image/png", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark.png", type: "image/png", media: "(prefers-color-scheme: dark)" },
+    ],
+    apple: "/apple-icon.png",
+  },
   openGraph: {
     type: "website",
     url: "/",
@@ -24,12 +32,14 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     locale: "es_AR",
     alternateLocale: ["en_US"],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Logo JF sobre la ilustración de la partida de ajedrez" }],
   },
   twitter: {
     card: "summary_large_image",
     creator: "@jopofernandez",
     title: `${TITLE} — producto, tecnología y ajedrez`,
     description: DESCRIPTION,
+    images: ["/og.png"],
   },
 };
 export const viewport: Viewport = { themeColor: "#eee9dc" };
