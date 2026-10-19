@@ -8,9 +8,11 @@ type Voice = { src: string; duration: number; anchors: [number, number][] };
 const VOICE = voices as unknown as Record<Lang, Voice>;
 
 const TXT = {
-  es: { all: "Mostrar todo", listen: "¿Te lo leo?", pause: "Pausar", resume: "Seguir" },
-  en: { all: "Show all", listen: "Want me to read it?", pause: "Pause", resume: "Resume" },
+  es: { all: "Mostrar todo", listen: "¿Te lo leo?", pause: "Pausar", resume: "Seguir", speed: "Velocidad de la voz:" },
+  en: { all: "Show all", listen: "Want me to read it?", pause: "Pause", resume: "Resume", speed: "Voice speed:" },
 };
+
+const RATES = [1, 1.25, 1.5, 2];
 
 // ritmo de lectura: ~38 letras por segundo, con pausas en la puntuación y entre párrafos
 const CPS = 38;
@@ -43,6 +45,15 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
   const total = paragraphs.reduce((n, p) => n + p.length, 0);
   const [n, setN] = useState(total); // HTML estático: texto completo
   const [voice, setVoice] = useState<"idle" | "playing" | "paused">("idle");
+  // velocidad de la voz: 1x → 1.25x → 1.5x → 2x → 1x (la escritura sigue igual, porque se guía por el tiempo del audio)
+  const [rate, setRate] = useState(1);
+  const rateRef = useRef(1);
+  const nextRate = () => {
+    const r = RATES[(RATES.indexOf(rateRef.current) + 1) % RATES.length];
+    rateRef.current = r;
+    setRate(r);
+    if (audioRef.current) audioRef.current.playbackRate = r;
+  };
   const boxRef = useRef<HTMLDivElement>(null);
   const caretRef = useRef<HTMLSpanElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -73,6 +84,7 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
     if (!a) {
       a = new Audio(VOICE[lang].src);
       a.preload = "auto";
+      a.playbackRate = rateRef.current;
       a.addEventListener("play", () => { setVoice("playing"); dispatchEvent(new CustomEvent("pc-voice", { detail: true })); });
       a.addEventListener("pause", () => { if (!a!.ended) setVoice("paused"); dispatchEvent(new CustomEvent("pc-voice", { detail: false })); });
       a.addEventListener("ended", () => { setVoice("idle"); a!.currentTime = 0; dispatchEvent(new CustomEvent("pc-voice", { detail: false })); });
@@ -120,10 +132,6 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
   let offset = 0;
   return (
     <div className="story" ref={boxRef}>
-      <button className="story-listen" data-state={voice} onClick={toggleVoice} aria-pressed={voice === "playing"}>
-        {voice === "playing" ? <span className="eq" aria-hidden="true"><i /><i /><i /></span> : <IconVoice />}
-        {voice === "playing" ? t.pause : voice === "paused" ? t.resume : t.listen}
-      </button>
       {/* solo lo ya escrito ocupa lugar: la card crece con el texto (desde un alto mínimo, en CSS) */}
       <div className="story-text" aria-hidden="true">
         {paragraphs.map((p, k) => {
@@ -140,7 +148,15 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
         })}
       </div>
       <div className="sr-only">{paragraphs.map((p, k) => <p key={k}>{p}</p>)}</div>
-      {!done && <button className="story-all" onClick={() => setN(total)}>{t.all} ↓</button>}
+      {/* barra fija abajo mientras se lee: voz, velocidad y mostrar todo */}
+      <div className="story-bar">
+        <button className="story-listen" data-state={voice} onClick={toggleVoice} aria-pressed={voice === "playing"}>
+          {voice === "playing" ? <span className="eq" aria-hidden="true"><i /><i /><i /></span> : <IconVoice />}
+          {voice === "playing" ? t.pause : voice === "paused" ? t.resume : t.listen}
+        </button>
+        <button className="story-rate" onClick={nextRate} aria-label={`${t.speed} ${rate}x`}>{rate}x</button>
+        {!done && <button className="story-all" onClick={() => setN(total)}>{t.all} ↓</button>}
+      </div>
     </div>
   );
 }
