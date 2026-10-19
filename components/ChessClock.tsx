@@ -23,7 +23,7 @@ function quadMatrix(q: number[][]) {
 }
 const MATRIX = quadMatrix((board.clock as { lcd: number[][] }).lcd);
 
-// segmentos a–g de un dígito (ancho 20, alto 38) y qué segmentos prende cada número
+// segmentos a, b, c, d, e, f y g de un dígito (ancho 20, alto 38) y qué segmentos prende cada número
 const SEG: Record<string, string> = {
   a: "3,0 17,0 14,3 6,3", b: "18,1 20,3 20,17 18,19 16,17 16,4", c: "18,19 20,21 20,35 18,37 16,34 16,21",
   d: "3,38 17,38 14,35 6,35", e: "2,19 4,21 4,34 2,37 0,35 0,21", f: "2,1 4,4 4,17 2,19 0,17 0,3", g: "3,19 6,17 14,17 17,19 14,21 6,21",

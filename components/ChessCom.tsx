@@ -54,7 +54,7 @@ export default function ChessCom({ c, lang }: { c: Card; lang: Lang }) {
       <span className="sum">{c.sum}</span>
       <span className="stats">
         {stats.map((x) => (
-          <span key={x.l} className="stat"><b>{x.v == null ? "—" : x.n ? nf.format(x.v) : x.v}</b><span>{x.l}</span></span>
+          <span key={x.l} className="stat"><b>{x.v == null ? "-" : x.n ? nf.format(x.v) : x.v}</b><span>{x.l}</span></span>
         ))}
       </span>
       <span className="tog" aria-hidden="true">↗</span>

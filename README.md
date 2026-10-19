@@ -21,7 +21,7 @@ El contenido está en `lib/content.ts`; la escena en `lib/chess-scene.ts` y `lib
 
 ## Créditos / Credits
 
-- **Música**: "Midnight Amber Room", de [Open Lo-Fi](https://github.com/btahir/open-lofi) — CC0 1.0 (dominio público).
-- **Sonido de las piezas**: grabaciones de [simone_ds](https://freesound.org/people/simone_ds/sounds/366065/) y [Alnotreally](https://freesound.org/people/Alnotreally/sounds/801349/) en Freesound — CC0 1.0.
+- **Música**: "Midnight Amber Room", de [Open Lo-Fi](https://github.com/btahir/open-lofi), con licencia CC0 1.0 (dominio público).
+- **Sonido de las piezas**: grabaciones de [simone_ds](https://freesound.org/people/simone_ds/sounds/366065/) y [Alnotreally](https://freesound.org/people/Alnotreally/sounds/801349/) en Freesound, con licencia CC0 1.0.
 - **Ilustraciones**: escena, piezas y manos generadas con gpt-image-2 y procesadas a mano (recorte, calibración del tablero, duotono).
 - **Tipografías**: [Geist](https://vercel.com/font) (SIL Open Font License).

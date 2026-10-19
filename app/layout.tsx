@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     url: "/",
     siteName: TITLE,
-    title: `${TITLE} — producto, tecnología y ajedrez`,
+    title: `${TITLE} - Producto, tecnología y ajedrez`,
     description: DESCRIPTION,
     locale: "es_AR",
     alternateLocale: ["en_US"],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     creator: "@jopofernandez",
-    title: `${TITLE} — producto, tecnología y ajedrez`,
+    title: `${TITLE} - Producto, tecnología y ajedrez`,
     description: DESCRIPTION,
     images: ["/og.png"],
   },

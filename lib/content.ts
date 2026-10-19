@@ -75,7 +75,7 @@ const EN: Section[] = [
     lede: "",
     cards: [
       {
-        meta: "global.esur · Oct 2026 — Present",
+        meta: "global.esur · Since Oct 2026",
         title: "Head of Product & Business Development",
         sum: "Product strategy and growth for OneClick: monetization, onboarding and adoption across Latin America.",
         more: [
@@ -85,7 +85,7 @@ const EN: Section[] = [
         ],
       },
       {
-        meta: "global.esur · May 2024 — Oct 2026",
+        meta: "global.esur · May 2024 to Oct 2026",
         title: "CEO",
         sum: "Helped double the customer base, enter new markets and develop new revenue streams.",
         more: [
@@ -96,35 +96,35 @@ const EN: Section[] = [
         ],
       },
       {
-        meta: "Mercado Libre · Jul 2021 — May 2024",
+        meta: "Mercado Libre · Jul 2021 to May 2024",
         title: "Product Fintech Supervisor",
         sum: "Credit card and credit line onboarding across the Mercado Libre and Mercado Pago ecosystem.",
         more: [
           "Designed and improved 20+ financial product acquisition journeys across Latin America",
           "Used company data, credit bureau queries and ML models to reduce friction and lift conversion",
-          "Previously Senior Fintech Product Analyst (2021 — 2023)",
+          "Previously Senior Fintech Product Analyst (2021 to 2023)",
         ],
       },
       {
-        meta: "Amalgama · Aug 2020 — Jul 2021",
+        meta: "Amalgama · Aug 2020 to Jul 2021",
         title: "Senior Product Owner",
         sum: "Digital products for U.S. clients: CRM solutions, ERPs and community platforms.",
       },
       {
-        meta: "BBVA · Banco Comafi · 2015 — 2020",
+        meta: "BBVA · Banco Comafi · 2015 to 2020",
         title: "Product Owner and earlier roles",
         sum: "Digital sales of financial products at BBVA; marketing and BI at Banco Comafi.",
         more: [
-          "BBVA Product Owner: investment-product acquisition flows with less friction (2019 — 2020)",
-          "BBVA Product Analyst: Investments, Personal & Mortgage Loans (2017 — 2018)",
-          "Banco Comafi: Marketing Analyst, after starting as Business Intelligence intern (2015 — 2017)",
+          "BBVA Product Owner: investment-product acquisition flows with less friction (2019 to 2020)",
+          "BBVA Product Analyst: Investments, Personal & Mortgage Loans (2017 to 2018)",
+          "Banco Comafi: Marketing Analyst, after starting as Business Intelligence intern (2015 to 2017)",
         ],
       },
       {
         meta: "Degree, courses and certifications",
         title: "Education",
         items: [
-          { title: "B.A. in Marketing", meta: "UADE · 2014 — 2018 · GPA 7.5 out of 10 · Exchange at the Berlin School of Economics and Law (2017)" },
+          { title: "B.A. in Marketing", meta: "UADE · 2014 to 2018 · GPA 7.5 out of 10 · Exchange at the Berlin School of Economics and Law (2017)" },
           { title: "Product Strategy", meta: "Reforge" },
           { title: "Advanced Certification in Blockchain", meta: "ITBA · 2022" },
           { title: "UX/UI Design", meta: "Coderhouse · 2020" },
@@ -217,7 +217,7 @@ const ES: Section[] = [
     lede: "",
     cards: [
       {
-        meta: "global.esur · Oct 2026 — Actualidad",
+        meta: "global.esur · Desde oct 2026",
         title: "Head of Product & Business Development",
         sum: "Estrategia de producto y crecimiento de OneClick: monetización, onboarding y adopción en Latinoamérica.",
         more: [
@@ -227,7 +227,7 @@ const ES: Section[] = [
         ],
       },
       {
-        meta: "global.esur · May 2024 — Oct 2026",
+        meta: "global.esur · May 2024 a oct 2026",
         title: "CEO",
         sum: "Ayudé a duplicar la base de clientes, entrar en nuevos mercados y desarrollar nuevas fuentes de ingresos.",
         more: [
@@ -238,35 +238,35 @@ const ES: Section[] = [
         ],
       },
       {
-        meta: "Mercado Libre · Jul 2021 — May 2024",
+        meta: "Mercado Libre · Jul 2021 a may 2024",
         title: "Product Fintech Supervisor",
         sum: "Onboarding de tarjetas de crédito y líneas de crédito en el ecosistema de Mercado Libre y Mercado Pago.",
         more: [
           "Diseñé y mejoré más de 20 flujos de adquisición de productos financieros en Latinoamérica",
           "Usé datos propios, consultas a burós de crédito y modelos de ML para reducir fricción y mejorar la conversión",
-          "Antes, Senior Fintech Product Analyst (2021 — 2023)",
+          "Antes, Senior Fintech Product Analyst (2021 a 2023)",
         ],
       },
       {
-        meta: "Amalgama · Ago 2020 — Jul 2021",
+        meta: "Amalgama · Ago 2020 a jul 2021",
         title: "Senior Product Owner",
         sum: "Productos digitales para clientes de EE. UU.: soluciones de CRM, ERPs y plataformas para comunidades.",
       },
       {
-        meta: "BBVA · Banco Comafi · 2015 — 2020",
+        meta: "BBVA · Banco Comafi · 2015 a 2020",
         title: "Product Owner y roles anteriores",
         sum: "Venta digital de productos financieros en BBVA; marketing y BI en Banco Comafi.",
         more: [
-          "Product Owner en BBVA: flujos de adquisición de inversiones con menos fricción (2019 — 2020)",
-          "Product Analyst en BBVA: Inversiones, Préstamos Personales e Hipotecarios (2017 — 2018)",
-          "Banco Comafi: Marketing Analyst, después de empezar como pasante de Business Intelligence (2015 — 2017)",
+          "Product Owner en BBVA: flujos de adquisición de inversiones con menos fricción (2019 a 2020)",
+          "Product Analyst en BBVA: Inversiones, Préstamos Personales e Hipotecarios (2017 a 2018)",
+          "Banco Comafi: Marketing Analyst, después de empezar como pasante de Business Intelligence (2015 a 2017)",
         ],
       },
       {
         meta: "Carrera, cursos y certificaciones",
         title: "Formación",
         items: [
-          { title: "Licenciatura en Marketing", meta: "UADE · 2014 — 2018 · Promedio 7,5 sobre 10 · Intercambio en la Berlin School of Economics and Law (2017)" },
+          { title: "Licenciatura en Marketing", meta: "UADE · 2014 a 2018 · Promedio 7,5 sobre 10 · Intercambio en la Berlin School of Economics and Law (2017)" },
           { title: "Product Strategy", meta: "Reforge" },
           { title: "Certificación Avanzada en Blockchain", meta: "ITBA · 2022" },
           { title: "Diseño UX/UI", meta: "Coderhouse · 2020" },
@@ -350,7 +350,7 @@ export const SECTIONS: Record<Lang, Section[]> = { es: ES, en: EN };
 export const SECTION_IDS = ES.map((s) => s.id);
 
 // Una jugada por sección: Apertura Inglesa vs esquema de India de Rey (fianchetto doble).
-// 1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O — el enroque mueve dos piezas.
+// 1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O: el enroque mueve dos piezas.
 export type Ply = { san: string; moves: [string, string][] };
 export const PLIES: Ply[] = [
   { san: "c4", moves: [["c2", "c4"]] },
