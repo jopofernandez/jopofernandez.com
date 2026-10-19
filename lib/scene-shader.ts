@@ -85,6 +85,9 @@ export class SceneShader {
   private u: Record<string, WebGLUniformLocation | null> = {};
   private cam = { tx: 0, ty: 0, s: 1 };
   private ready = 0;
+  private resolveLoaded!: () => void;
+  /** se resuelve cuando la textura de la escena está cargada (o falló), para mostrar todo junto */
+  readonly loaded = new Promise<void>((r) => { this.resolveLoaded = r; });
   private raf = 0;
   private t0 = performance.now();
   private frozenAt: number | null = null;
@@ -120,7 +123,9 @@ export class SceneShader {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE, gl.UNSIGNED_BYTE, image);
       this.ready = 1;
       this.draw();
+      this.resolveLoaded();
     };
+    image.onerror = () => this.resolveLoaded();
     image.src = src;
     this.resize();
   }

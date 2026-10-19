@@ -39,6 +39,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 a { color: inherit; }
 :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
 
+/* Hasta que la escena está lista no se muestra nada: shader, piezas, reloj y textos aparecen juntos */
+body { transition: opacity 0.7s ease; }
+html.loading body { opacity: 0; }
+
 /* ---------- Fondo: shader + escena ---------- */
 .bg { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
 .scene { position: fixed; inset: 0; overflow: hidden; z-index: 1; pointer-events: none; }

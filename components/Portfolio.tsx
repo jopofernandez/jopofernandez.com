@@ -37,6 +37,7 @@ export default function Portfolio() {
   const shaderRef = useRef<SceneShader | null>(null);
   const musicRef = useRef<Music | null>(null);
   const activeRef = useRef(-2);
+  const readyRef = useRef<Promise<void>>(Promise.resolve());
 
   const [active, setActive] = useState(-1); // -1 = portada
   const [turn, setTurn] = useState<Side>("white");
@@ -101,6 +102,11 @@ export default function Portfolio() {
 
     scene.camera(-1, true);
     shader?.start();
+    // todo aparece junto: textura del shader + sprites de piezas y manos
+    readyRef.current = Promise.all([shader?.loaded, scene.loaded()]).then(() => {
+      performance.mark("scene-ready");
+      document.documentElement.classList.remove("loading");
+    });
     const onVis = () => { music.setHidden(document.hidden); return document.hidden ? shader?.stop() : !mq.matches && shader?.start(); };
     document.addEventListener("visibilitychange", onVis);
     const onResize = () => { shader?.resize(); scene.camera(activeRef.current < -1 ? -1 : activeRef.current, true); };
@@ -140,8 +146,10 @@ export default function Portfolio() {
       if (scene) scene.goTo(start, { instant: true });
       document.getElementById(SECTION_IDS[start])?.scrollIntoView({ block: "center" });
     }
-    const t = setTimeout(check, 400);
-    return () => { removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); clearTimeout(t); };
+    // la primera jugada arranca cuando la escena ya está a la vista
+    let t = 0, alive = true;
+    void readyRef.current.then(() => { if (alive) t = window.setTimeout(check, 700); });
+    return () => { alive = false; removeEventListener("scroll", onScroll); cancelAnimationFrame(raf); clearTimeout(t); };
   }, []);
 
   const goTo = useCallback((i: number) => {
@@ -248,7 +256,7 @@ export default function Portfolio() {
       <main>
         <section id="top" className="hero">
           <div className="hero-copy">
-            <h1>{PROFILE.name}</h1>
+            <h1>{PROFILE.display}</h1>
             <p className="role">{t.role}</p>
             <button className="cue" onClick={() => goTo(0)}>{t.cue} <span aria-hidden="true">↓</span></button>
           </div>

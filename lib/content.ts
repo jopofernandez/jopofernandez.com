@@ -15,6 +15,8 @@ export type Section = { id: string; name: string; lede: string; cards: Card[] };
 
 export const PROFILE = {
   name: "Ezequiel Fernández",
+  // nombre de la portada
+  display: "Jopo Fernández",
   location: "Buenos Aires, AR",
   email: "ezequiel.fernandez.cuevas@gmail.com",
   linkedin: "https://www.linkedin.com/in/ezequiel-fc/",
@@ -27,7 +29,7 @@ const insightEs = (slug: string) => `https://globalesur.com/es/insights/${slug}`
 /** textos de la interfaz */
 export const UI = {
   es: {
-    role: "Liderazgo de producto · Estrategia de producto · Productos digitales",
+    role: "Apasionado por la tecnología, el ajedrez y construir en equipo",
     cue: "Bajá para seguir la partida",
     sections: "Secciones",
     themeToLight: "Cambiar a tema claro", themeToDark: "Cambiar a tema oscuro",
@@ -37,7 +39,7 @@ export const UI = {
     line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O d6",
   },
   en: {
-    role: "Product Leadership · Product Strategy · Digital Products",
+    role: "Passionate about technology, chess and building as a team",
     cue: "Scroll to continue the game",
     sections: "Sections",
     themeToLight: "Switch to light theme", themeToDark: "Switch to dark theme",

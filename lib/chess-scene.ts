@@ -73,6 +73,13 @@ export class ChessScene {
 
   destroy() { this.destroyed = true; this.els.layer.replaceChildren(); }
 
+  /** se resuelve cuando piezas y manos están decodificadas (con tope, porque decode() a veces no vuelve nunca) */
+  loaded(timeout = 4000) {
+    const imgs = [...Object.values(this.position).map((p) => p.img), this.els.hands.white, this.els.hands.black];
+    const all = Promise.all(imgs.map((img) => img.decode().catch(() => {}))).then(() => {});
+    return Promise.race([all, new Promise<void>((r) => setTimeout(r, timeout))]);
+  }
+
   private src(path: string) { return `${this.base}/${this.palette}/${path}.webp`; }
 
   setPalette(p: Palette) {
