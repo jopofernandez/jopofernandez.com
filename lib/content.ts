@@ -9,7 +9,7 @@ export type Card = {
   meta: string;
   title: string;
   sum: string;
-  more?: string[];
+  more?: (string | { label: string; href: string })[];
   tags?: string[];
   href?: string;
   /** fotos que se muestran en una tira debajo de la card */
@@ -43,7 +43,7 @@ export const UI = {
     soundOn: "Activar sonido", soundOff: "Silenciar",
     musicOn: "Poner música", musicOff: "Pausar música",
     langSwitch: "English", langCode: "EN",
-    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O",
+    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3",
   },
   en: {
     role: "Passionate about technology, chess and building as a team",
@@ -53,7 +53,7 @@ export const UI = {
     soundOn: "Turn sound on", soundOff: "Turn sound off",
     musicOn: "Play music", musicOff: "Pause music",
     langSwitch: "Español", langCode: "ES",
-    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O",
+    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3",
   },
 } as const;
 
@@ -129,6 +129,21 @@ const EN: Section[] = [
     ],
   },
   {
+    id: "chess",
+    name: "Chess",
+    lede: "Where the strategy habit comes from.",
+    cards: [
+      { meta: "Chess.com · lajopeta", title: "My online chess", sum: "Current ratings and games played since I started.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
+      {
+        meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
+        title: "Techess: a tournament for 30 players",
+        sum: "The fourth tournament I've organized, and the biggest so far. Put together with Crecimiento, with applied-AI workshops.",
+        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
+        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
+      },
+    ],
+  },
+  {
     id: "projects",
     name: "Projects",
     lede: "Products built, problems solved, decisions taken.",
@@ -154,6 +169,18 @@ const EN: Section[] = [
         tags: ["Platform", "Data"],
       },
       {
+        meta: "global.esur · Insights",
+        title: "Newsletter",
+        sum: "Insights on technology and collective rights management, written for decision-makers at CMOs. 22 articles since January 2026, in English, Spanish and Portuguese.",
+        more: [
+          { label: "The Challenge of Licensing the Long Tail", href: insightEn("long-tail-licensing-challenge") },
+          { label: "Sony and Universal vs. Suno, Round 2", href: insightEn("sony-universal-suno-second-lawsuit") },
+          { label: "AI in audiovisual, where do we stand?", href: insightEn("ai-in-audiovisual-where-we-stand") },
+          { label: "All insights", href: "https://globalesur.com/insights" },
+        ],
+        tags: ["Content", "Research", "CMOs"],
+      },
+      {
         meta: "AI agent",
         title: "Newsletter Radar",
         sum: "Research agent that scans sources on technology × collective rights management and sends a curated digest, with an approval dashboard.",
@@ -173,63 +200,6 @@ const EN: Section[] = [
     name: "Travel",
     lede: "Places that shaped how I see things.",
     cards: [],
-  },
-  {
-    id: "stack",
-    name: "Tech Stack",
-    lede: "Tools I use, and what I actually use them for.",
-    cards: [
-      { meta: "Build", title: "Web products", sum: "Prototypes and production front-ends.", tags: ["Next.js", "React", "TypeScript", "Tailwind", "Vite"] },
-      { meta: "Data & backend", title: "Services and storage", sum: "Small APIs and managed databases.", tags: ["Supabase", "PostgreSQL", ".NET", "Vercel"] },
-      { meta: "AI & automation", title: "Agents and workflows", sum: "Research, content and operations automated end to end.", tags: ["Claude Code", "AI agents", "n8n", "Resend"] },
-      { meta: "Product craft", title: "Deciding what to build", sum: "Analytics, experimentation and design.", tags: ["Product analytics", "UX/UI", "Applied ML", "Remotion"] },
-    ],
-  },
-  {
-    id: "chess",
-    name: "Chess",
-    lede: "Where the strategy habit comes from.",
-    cards: [
-      { meta: "Chess.com · lajopeta", title: "My online chess", sum: "Current ratings and games played since I started.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
-      {
-        meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess: a tournament for 30 players",
-        sum: "The fourth tournament I've organized, and the biggest so far. Put together with Crecimiento, with applied-AI workshops.",
-        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
-        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
-      },
-    ],
-  },
-  {
-    id: "newsletter",
-    name: "Newsletter",
-    lede: "Insights on technology and collective rights management, written for decision-makers at CMOs.",
-    cards: [
-      {
-        meta: "Oct 7, 2026",
-        title: "The Challenge of Licensing the Long Tail",
-        sum: "The hardest operational challenge for a CMO lies with the thousands of small establishments that use music and rarely get licensed.",
-        href: insightEn("long-tail-licensing-challenge"),
-      },
-      {
-        meta: "Sep 21, 2026",
-        title: "Sony and Universal vs. Suno, Round 2",
-        sum: "The argument is no longer which catalog was used, but how the model was trained, and that changes the question for every CMO.",
-        href: insightEn("sony-universal-suno-second-lawsuit"),
-      },
-      {
-        meta: "Aug 26, 2026",
-        title: "AI in audiovisual, where do we stand?",
-        sum: "A map of the six leading players in AI video generation, their approach and their legal exposure.",
-        href: insightEn("ai-in-audiovisual-where-we-stand"),
-      },
-      {
-        meta: "Archive",
-        title: "All insights",
-        sum: "22 articles since January 2026, in English, Spanish and Portuguese.",
-        href: "https://globalesur.com/insights",
-      },
-    ],
   },
   {
     id: "contact",
@@ -315,6 +285,21 @@ const ES: Section[] = [
     ],
   },
   {
+    id: "chess",
+    name: "Ajedrez",
+    lede: "De dónde viene el hábito de pensar en estrategia.",
+    cards: [
+      { meta: "Chess.com · lajopeta", title: "Mi ajedrez online", sum: "Rating actual y partidas jugadas desde que empecé.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
+      {
+        meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
+        title: "Techess: un torneo para 30 personas",
+        sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Crecimiento, con workshops de IA aplicada.",
+        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
+        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
+      },
+    ],
+  },
+  {
     id: "projects",
     name: "Proyectos",
     lede: "Productos construidos, problemas resueltos, decisiones tomadas.",
@@ -340,6 +325,18 @@ const ES: Section[] = [
         tags: ["Plataforma", "Datos"],
       },
       {
+        meta: "global.esur · Insights",
+        title: "Newsletter",
+        sum: "Insights sobre tecnología y gestión colectiva de derechos, para quienes deciden en las sociedades de gestión. 22 artículos desde enero de 2026, en español, inglés y portugués.",
+        more: [
+          { label: "El desafío del licenciamiento en el long tail", href: insightEs("desafio-licenciamiento-long-tail") },
+          { label: "Sony y Universal vs. Suno, round 2", href: insightEs("sony-universal-suno-segunda-demanda") },
+          { label: "IA en el audiovisual, ¿dónde estamos parados?", href: insightEs("ia-audiovisual-donde-estamos-parados") },
+          { label: "Todos los insights", href: "https://globalesur.com/es/insights" },
+        ],
+        tags: ["Contenido", "Research", "Sociedades de gestión"],
+      },
+      {
         meta: "Agente de IA",
         title: "Newsletter Radar",
         sum: "Agente de research que monitorea fuentes sobre tecnología × gestión colectiva de derechos y envía un digest curado, con panel de aprobación.",
@@ -359,63 +356,6 @@ const ES: Section[] = [
     name: "Viajes",
     lede: "Lugares que me cambiaron la forma de ver las cosas.",
     cards: [],
-  },
-  {
-    id: "stack",
-    name: "Stack técnico",
-    lede: "Las herramientas que uso, y para qué las uso de verdad.",
-    cards: [
-      { meta: "Construir", title: "Productos web", sum: "Prototipos y front-ends en producción.", tags: ["Next.js", "React", "TypeScript", "Tailwind", "Vite"] },
-      { meta: "Datos y backend", title: "Servicios y almacenamiento", sum: "APIs chicas y bases de datos gestionadas.", tags: ["Supabase", "PostgreSQL", ".NET", "Vercel"] },
-      { meta: "IA y automatización", title: "Agentes y flujos", sum: "Research, contenido y operaciones automatizados de punta a punta.", tags: ["Claude Code", "Agentes de IA", "n8n", "Resend"] },
-      { meta: "Oficio de producto", title: "Decidir qué construir", sum: "Analítica, experimentación y diseño.", tags: ["Product analytics", "UX/UI", "ML aplicado", "Remotion"] },
-    ],
-  },
-  {
-    id: "chess",
-    name: "Ajedrez",
-    lede: "De dónde viene el hábito de pensar en estrategia.",
-    cards: [
-      { meta: "Chess.com · lajopeta", title: "Mi ajedrez online", sum: "Rating actual y partidas jugadas desde que empecé.", href: "https://www.chess.com/member/lajopeta", chesscom: true },
-      {
-        meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess: un torneo para 30 personas",
-        sum: "Mi cuarto torneo organizado y el más grande hasta ahora. Lo armamos junto a Crecimiento, con workshops de IA aplicada.",
-        href: "https://www.linkedin.com/posts/ezequiel-fc_as%C3%AD-fue-la-primera-edici%C3%B3n-de-techess-ugcPost-7460401440621010945-DaTW/",
-        photos: [1, 2].map((n) => ({ src: `/assets/chess/techess-0${n}.webp`, thumb: `/assets/chess/techess-0${n}-s.webp`, w: 427, h: 240 })),
-      },
-    ],
-  },
-  {
-    id: "newsletter",
-    name: "Newsletter",
-    lede: "Insights sobre tecnología y gestión colectiva de derechos, para quienes toman decisiones en las sociedades de gestión.",
-    cards: [
-      {
-        meta: "7 oct 2026",
-        title: "El desafío del licenciamiento en el long tail",
-        sum: "El desafío operativo más difícil para una sociedad de gestión está en los miles de pequeños establecimientos que usan música y casi nunca se licencian.",
-        href: insightEs("desafio-licenciamiento-long-tail"),
-      },
-      {
-        meta: "21 sep 2026",
-        title: "Sony y Universal vs. Suno, round 2",
-        sum: "El argumento ya no es qué catálogo se usó, sino cómo se entrenó el modelo, y eso cambia la pregunta para cualquier sociedad de gestión.",
-        href: insightEs("sony-universal-suno-segunda-demanda"),
-      },
-      {
-        meta: "26 ago 2026",
-        title: "IA en el audiovisual, ¿dónde estamos parados?",
-        sum: "Un mapa de los seis jugadores principales en generación de video con IA, su enfoque y su situación legal.",
-        href: insightEs("ia-audiovisual-donde-estamos-parados"),
-      },
-      {
-        meta: "Archivo",
-        title: "Todos los insights",
-        sum: "22 artículos desde enero de 2026, en español, inglés y portugués.",
-        href: "https://globalesur.com/es/insights",
-      },
-    ],
   },
   {
     id: "contact",
@@ -444,7 +384,5 @@ export const PLIES: Ply[] = [
   { san: "Bg2", moves: [["f1", "g2"]] },
   { san: "Bg7", moves: [["f8", "g7"]] },
   { san: "Nf3", moves: [["g1", "f3"]] },
-  { san: "O-O", moves: [["e8", "g8"], ["h8", "f8"]] },
-  { san: "O-O", moves: [["e1", "g1"], ["h1", "f1"]] },
 ];
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";

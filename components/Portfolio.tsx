@@ -335,7 +335,7 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
     <div className="row-wrap" data-open={open}>
       <button className="row" aria-expanded={open} onClick={toggle}>{body}<span className="tog" aria-hidden="true">+</span></button>
       <div className="more"><div>
-        {c.more && <ul>{c.more.map((m) => <li key={m}>{m}</li>)}</ul>}
+        {c.more && <ul>{c.more.map((m) => typeof m === "string" ? <li key={m}>{m}</li> : <li key={m.href}><a href={m.href} target="_blank" rel="noreferrer">{m.label} ↗</a></li>)}</ul>}
         {c.tags && <div className="tags">{c.tags.map((t) => <span key={t}>{t}</span>)}</div>}
       </div></div>
     </div>
