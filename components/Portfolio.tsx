@@ -10,6 +10,7 @@ import board from "@/lib/data/board.json";
 import TravelMap from "./TravelMap";
 import ChessCom from "./ChessCom";
 import Story from "./Story";
+import ChessClock from "./ChessClock";
 
 const MUTE_KEY = "pc-muted";
 const THEME_KEY = "pc-theme-v2";
@@ -352,32 +353,6 @@ function Row({ c, open, toggle }: { c: Card; open: boolean; toggle: () => void }
         {c.tags && <div className="tags">{c.tags.map((t) => <span key={t}>{t}</span>)}</div>}
       </div></div>
     </div>
-  );
-}
-
-/** Reloj de ajedrez sobre la ilustración: corre el reloj del bando que tiene que mover (izquierda = blancas). */
-function ChessClock({ turn, paused }: { turn: Side; paused: boolean }) {
-  const { left, right, r } = board.clock as { left: number[]; right: number[]; r: number };
-  const dial = (c: number[], running: boolean, seed: number) => {
-    const play = running && !paused ? "running" : "paused";
-    const hand = (len: number, w: number, dur: string, timing: string, start: number, cls?: string) => (
-      <g style={{ transformBox: "view-box", transformOrigin: `${c[0]}px ${c[1]}px`, animation: `clock-spin ${dur} ${timing} infinite`, animationPlayState: play, animationDelay: `-${start}s` }}>
-        <line className={cls} x1={c[0]} y1={c[1] + len * 0.18} x2={c[0]} y2={c[1] - len} strokeWidth={w} />
-      </g>
-    );
-    return (
-      <g>
-        {hand(r * 0.55, 5, "3600s", "linear", 3600 * seed)}
-        {hand(r * 0.82, 2.6, "60s", "steps(60)", 60 * ((seed * 7) % 1), "sec")}
-        <circle cx={c[0]} cy={c[1]} r={4.5} className="cap" />
-      </g>
-    );
-  };
-  return (
-    <svg className="clock" viewBox={`0 0 ${board.size[0]} ${board.size[1]}`} width={board.size[0]} height={board.size[1]}>
-      {dial(left, turn === "white", 0.37)}
-      {dial(right, turn === "black", 0.61)}
-    </svg>
   );
 }
 

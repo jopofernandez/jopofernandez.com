@@ -51,10 +51,17 @@ html.loading body { opacity: 0; }
 .pc img { position: absolute; display: block; user-select: none; }
 .pc svg { position: absolute; left: 0; top: 0; overflow: visible; }
 .hand { position: absolute; left: 0; top: 0; transform-origin: 0 0; opacity: 0; z-index: 6000; user-select: none; pointer-events: none; }
-.clock { position: absolute; left: 0; top: 0; overflow: visible; }
-.clock line { stroke: var(--ink); stroke-linecap: round; }
-.clock .cap { fill: var(--ink); }
-@keyframes clock-spin { to { transform: rotate(360deg); } }
+/* reloj digital: display de 7 segmentos proyectado sobre la pantalla del reloj dibujado */
+.lcd { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.lcd svg { display: block; overflow: visible; }
+.lcd .on { fill: var(--ink); opacity: 0.88; }
+.lcd .off { fill: var(--ink); opacity: 0.07; }
+.lcd .colon rect { fill: var(--ink); opacity: 0.88; }
+.lcd .colon.blink { animation: lcd-blink 1s steps(1) infinite; }
+.lcd .div { stroke: var(--ink); stroke-width: 1.2; opacity: 0.35; }
+.lcd .run { fill: var(--accent-line); }
+@keyframes lcd-blink { 50% { opacity: 0.15; } }
+@media (prefers-reduced-motion: reduce) { .lcd .colon.blink { animation: none; } }
 
 /* ---------- Barra superior ---------- */
 .top {
@@ -228,7 +235,7 @@ a.row:hover .tog { transform: translate(2px, -2px); }
 
 /* ---------- Acento lima: lo que está vivo (reloj que corre, progreso, pieza en el aire, links) ---------- */
 .progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 30; transform-origin: 0 50%; background: var(--accent-line); transition: transform 0.8s var(--ease); }
-.clock .sec { stroke: var(--accent-line); }
+
 .pc.moving svg ellipse { fill: url(#hatch-accent); }
 a.row .tog, .cue span { color: var(--accent-line); }
 button.row:hover .tog, a.row:hover .tog { border-color: var(--accent-line); }
