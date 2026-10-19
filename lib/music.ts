@@ -3,6 +3,7 @@
 // y cada vuelta se superpone con la siguiente con un fundido cruzado de igual potencia.
 
 export const MUSIC_SRC = "/assets/music/lofi.mp3";
+const DUCK = 0.25;   // la música queda al 25% mientras habla la voz
 const VOLUME = 0.2;  // bien por debajo del sonido de las piezas (~9 dB menos que en la página de prueba)
 const XF = 3;        // segundos de fundido cruzado entre vueltas
 
@@ -32,6 +33,9 @@ function loopRegion(buf: AudioBuffer) {
 export class Music {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
+  // segundo control de volumen: baja la música mientras suena la voz de "Sobre mí"
+  private duckNode: GainNode | null = null;
+  private ducked = false;
   private buf: AudioBuffer | null = null;
   private region = { start: 0, end: 0 };
   private loading: Promise<void> | null = null;
@@ -54,7 +58,9 @@ export class Music {
       this.ctx = new Ctx();
       this.master = this.ctx.createGain();
       this.master.gain.value = 0;
-      this.master.connect(this.ctx.destination);
+      this.duckNode = this.ctx.createGain();
+      this.duckNode.gain.value = this.ducked ? DUCK : 1;
+      this.master.connect(this.duckNode).connect(this.ctx.destination);
     }
     const ctx = this.ctx, master = this.master!;
     await ctx.resume();
@@ -95,6 +101,16 @@ export class Music {
     g.setValueAtTime(g.value, now);
     g.linearRampToValueAtTime(0, now + 0.8);
     window.setTimeout(() => { if (!this.playing) void ctx.suspend(); }, 900);
+  }
+
+  /** baja (o devuelve) el volumen de la música mientras habla la voz */
+  duck(on: boolean) {
+    this.ducked = on;
+    if (!this.ctx || !this.duckNode) return;
+    const g = this.duckNode.gain, now = this.ctx.currentTime;
+    g.cancelScheduledValues(now);
+    g.setValueAtTime(g.value, now);
+    g.linearRampToValueAtTime(on ? DUCK : 1, now + (on ? 0.4 : 1.5));
   }
 
   /** pestaña oculta: suspende sin perder la posición; al volver, sigue si estaba sonando */

@@ -96,6 +96,9 @@ export default function Portfolio() {
     };
     addEventListener("pointerdown", unlock);
     addEventListener("keydown", unlock);
+    // la voz de "Sobre mí" avisa cuando habla, para bajar la música
+    const onVoice = (e: Event) => music.duck((e as CustomEvent<boolean>).detail);
+    addEventListener("pc-voice", onVoice);
 
     // movimiento reducido: jugadas instantáneas, sin manos y escena quieta
     const mq = matchMedia("(prefers-reduced-motion: reduce)");
@@ -116,7 +119,7 @@ export default function Portfolio() {
     addEventListener("resize", onResize);
 
     return () => {
-      removeEventListener("pointerdown", unlock); removeEventListener("keydown", unlock); removeEventListener("resize", onResize);
+      removeEventListener("pointerdown", unlock); removeEventListener("keydown", unlock); removeEventListener("resize", onResize); removeEventListener("pc-voice", onVoice);
       mq.removeEventListener("change", applyMotion); document.removeEventListener("visibilitychange", onVis);
       shader?.destroy(); scene.destroy(); music.destroy(); sceneRef.current = null;
     };

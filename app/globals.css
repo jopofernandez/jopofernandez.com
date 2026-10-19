@@ -139,7 +139,18 @@ main { position: relative; z-index: 10; }
 @media (max-width: 640px) { .chesscom .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ---------- Sobre mí: texto que se escribe letra por letra ---------- */
-.story { position: relative; margin-top: 16px; }
+.story { margin-top: 16px; }
+/* "¿Te lo leo?": arriba a la derecha de la card, a la altura del título */
+.story-listen { position: absolute; top: 30px; right: 32px; display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px 7px 10px; border-radius: 999px; border: 1px solid var(--line-strong); background: rgba(var(--paper-rgb), 0.6); font: 400 11px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink); transition: border-color 0.2s, background 0.2s; }
+.story-listen:hover { border-color: var(--ink); }
+.story-listen svg { width: 15px; height: 15px; }
+.story-listen[data-state="playing"] { border-color: var(--accent-line); }
+.story-listen .eq { display: inline-flex; align-items: flex-end; gap: 2px; width: 15px; height: 12px; }
+.story-listen .eq i { flex: 1; height: 100%; background: var(--accent-line); border-radius: 1px; transform-origin: bottom; animation: eq 0.9s ease-in-out infinite; }
+.story-listen .eq i:nth-child(2) { animation-delay: -0.3s; } .story-listen .eq i:nth-child(3) { animation-delay: -0.6s; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) { .story-listen .eq i { animation: none; transform: scaleY(0.7); } }
+@media (max-width: 640px) { .story-listen { top: 24px; right: 22px; } }
 .story p { margin: 0 0 14px; font-size: 15.5px; line-height: 1.62; color: var(--ink-soft); }
 .story p:last-child { margin-bottom: 0; color: var(--ink); }
 .story .ghost { color: transparent; }
