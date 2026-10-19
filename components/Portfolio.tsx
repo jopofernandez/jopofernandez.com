@@ -9,6 +9,7 @@ import { PROFILE, SECTIONS, SECTION_IDS, UI, type Card, type Lang } from "@/lib/
 import board from "@/lib/data/board.json";
 import TravelMap from "./TravelMap";
 import ChessCom from "./ChessCom";
+import Story from "./Story";
 
 const MUTE_KEY = "pc-muted";
 const THEME_KEY = "pc-theme-v2";
@@ -213,7 +214,7 @@ export default function Portfolio() {
 
       {/* Fondo: shader de la escena + piezas, manos y reloj alineados con la misma cámara */}
       <canvas className="bg" ref={canvasRef} aria-hidden="true" />
-      <div className="progress" style={{ transform: `scaleX(${(active + 1) / 9})` }} aria-hidden="true" />
+      <div className="progress" style={{ transform: `scaleX(${(active + 1) / SECTION_IDS.length})` }} aria-hidden="true" />
       <div className="scene" aria-hidden="true">
         <div className="stage" ref={stageRef}>
           <ChessClock turn={turn} paused={reduce} />
@@ -269,7 +270,8 @@ export default function Portfolio() {
             <div className="panel">
               {s.id === "contact" && <span className="mark" aria-hidden="true" />}
               <h2>{s.name}</h2>
-              <p className="lede">{s.lede}</p>
+              {s.lede && <p className="lede">{s.lede}</p>}
+              {s.story && <Story paragraphs={s.story} lang={lang} />}
               {s.id === "travel" && <TravelMap lang={lang} />}
               {s.cards.length > 0 && <div className="rows">
                 {s.cards.map((c, k) => {

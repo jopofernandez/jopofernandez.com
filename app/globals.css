@@ -138,6 +138,17 @@ main { position: relative; z-index: 10; }
 .chesscom .stat span { display: block; margin-top: 3px; font: 400 10px/1.3 var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); }
 @media (max-width: 640px) { .chesscom .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
+/* ---------- Sobre mí: texto que se escribe letra por letra ---------- */
+.story { position: relative; margin-top: 16px; }
+.story p { margin: 0 0 14px; font-size: 15.5px; line-height: 1.62; color: var(--ink-soft); }
+.story p:first-child { font: 500 20px/1.4 var(--font-sans); letter-spacing: -0.015em; color: var(--ink); }
+.story p:last-child { margin-bottom: 0; color: var(--ink); }
+.story .ghost { color: transparent; }
+.story .caret { display: inline-block; width: 2px; height: 1.05em; margin: 0 1px -0.16em; background: var(--accent-line); animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.story-all { position: sticky; bottom: 18px; float: right; margin-top: -32px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line-strong); background: rgba(var(--paper-rgb), 0.9); font: 400 11px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
 /* logo JF (Contacto): una máscara pintada con la tinta del tema, así sirve igual en claro y en oscuro */
 .mark { position: absolute; top: 30px; right: 32px; width: 52px; aspect-ratio: 462 / 263; background: var(--ink); -webkit-mask: url(/assets/logo/jf.png) center / contain no-repeat; mask: url(/assets/logo/jf.png) center / contain no-repeat; }
 @media (max-width: 640px) { .mark { top: 24px; right: 22px; width: 44px; } }

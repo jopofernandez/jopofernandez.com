@@ -2,6 +2,8 @@
 // proyectos locales (Over The Board, Newsletter Radar, OneClick) y los artículos de globalesur.com/insights.
 // Editar acá: la lógica de la escena no depende del texto. Ambos idiomas tienen las mismas secciones en el mismo orden.
 
+import { STORY } from "./story";
+
 export type Lang = "es" | "en";
 export type Card = {
   meta: string;
@@ -16,7 +18,7 @@ export type Card = {
   chesscom?: boolean;
 };
 export type Photo = { src: string; thumb: string; w: number; h: number };
-export type Section = { id: string; name: string; lede: string; cards: Card[] };
+export type Section = { id: string; name: string; lede: string; cards: Card[]; story?: string[] };
 
 export const PROFILE = {
   name: "Ezequiel Fernández",
@@ -41,7 +43,7 @@ export const UI = {
     soundOn: "Activar sonido", soundOff: "Silenciar",
     musicOn: "Poner música", musicOff: "Pausar música",
     langSwitch: "English", langCode: "EN",
-    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O d6",
+    line: "1.c4 Cf6 2.g3 g6 3.Ag2 Ag7 4.Cf3 O-O 5.O-O",
   },
   en: {
     role: "Passionate about technology, chess and building as a team",
@@ -51,7 +53,7 @@ export const UI = {
     soundOn: "Turn sound on", soundOff: "Turn sound off",
     musicOn: "Play music", musicOff: "Pause music",
     langSwitch: "Español", langCode: "ES",
-    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O d6",
+    line: "1.c4 Nf6 2.g3 g6 3.Bg2 Bg7 4.Nf3 O-O 5.O-O",
   },
 } as const;
 
@@ -59,34 +61,9 @@ const EN: Section[] = [
   {
     id: "about",
     name: "About",
-    lede: "Product leader. I connect product strategy with business outcomes: read the position, think a few moves ahead, then execute.",
-    cards: [
-      {
-        meta: "Profile",
-        title: "Building digital products with cross-functional teams",
-        sum: "Background in fintech, digital acquisition, conversion optimization, technology modernization and business development across Latin America.",
-        more: [
-          "Product strategy & discovery, UX/UI and data-informed decisions",
-          "Applied ML and AI in products and internal processes",
-          "Spanish (native) · English (C1, daily with international clients)",
-        ],
-      },
-      {
-        meta: "Now",
-        title: "Head of Product & Business Development at global.esur",
-        sum: "Leading product strategy and growth for OneClick across Latin America.",
-      },
-      {
-        meta: "How I work",
-        title: "One North Star, then the next move",
-        sum: "Pick the metric that matters, remove friction end to end, ship often.",
-        more: [
-          "Client collections as North Star Metric, end-to-end conversion as KPI",
-          "From quarterly deployments to multiple releases per week",
-          "Coaching engineers to apply product and design principles",
-        ],
-      },
-    ],
+    lede: "",
+    cards: [],
+    story: STORY.en,
   },
   {
     id: "experience",
@@ -224,19 +201,6 @@ const EN: Section[] = [
     ],
   },
   {
-    id: "tournaments",
-    name: "Tournaments",
-    lede: "Chess events I organize, where chess and the tech community meet.",
-    cards: [
-      {
-        meta: "May 12, 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess — Chess & Tech Workshops",
-        sum: "Organized with Crecimiento. First edition: an open chess tournament plus two applied-AI workshops.",
-        href: "https://luma.com/techess",
-      },
-    ],
-  },
-  {
     id: "newsletter",
     name: "Newsletter",
     lede: "Insights on technology and collective rights management, written for decision-makers at CMOs.",
@@ -283,34 +247,9 @@ const ES: Section[] = [
   {
     id: "about",
     name: "Sobre mí",
-    lede: "Líder de producto. Conecto la estrategia de producto con los resultados del negocio: leer la posición, pensar unas jugadas adelante y ejecutar.",
-    cards: [
-      {
-        meta: "Perfil",
-        title: "Construyo productos digitales con equipos multidisciplinarios",
-        sum: "Experiencia en fintech, adquisición digital, optimización de conversión, modernización tecnológica y desarrollo de negocio en Latinoamérica.",
-        more: [
-          "Estrategia y discovery de producto, UX/UI y decisiones basadas en datos",
-          "ML e IA aplicados a productos y procesos internos",
-          "Español (nativo) · Inglés (C1, uso diario con clientes internacionales)",
-        ],
-      },
-      {
-        meta: "Hoy",
-        title: "Head of Product & Business Development en global.esur",
-        sum: "Lidero la estrategia de producto y el crecimiento de OneClick en Latinoamérica.",
-      },
-      {
-        meta: "Cómo trabajo",
-        title: "Una North Star, y después la próxima jugada",
-        sum: "Elegir la métrica que importa, sacar fricción de punta a punta y salir a producción seguido.",
-        more: [
-          "Recaudación de los clientes como North Star Metric y conversión end-to-end como KPI",
-          "De deploys trimestrales a varios releases por semana",
-          "Acompaño a los ingenieros a aplicar principios de producto y diseño",
-        ],
-      },
-    ],
+    lede: "",
+    cards: [],
+    story: STORY.es,
   },
   {
     id: "experience",
@@ -448,19 +387,6 @@ const ES: Section[] = [
     ],
   },
   {
-    id: "tournaments",
-    name: "Torneos",
-    lede: "Eventos de ajedrez que organizo, donde se cruzan el ajedrez y la comunidad tech.",
-    cards: [
-      {
-        meta: "12 de mayo de 2026 · Aleph Hub, Buenos Aires",
-        title: "Techess — Ajedrez y workshops tech",
-        sum: "Organizado junto a Crecimiento. Primera edición: un torneo abierto de ajedrez y dos workshops de IA aplicada.",
-        href: "https://luma.com/techess",
-      },
-    ],
-  },
-  {
     id: "newsletter",
     name: "Newsletter",
     lede: "Insights sobre tecnología y gestión colectiva de derechos, para quienes toman decisiones en las sociedades de gestión.",
@@ -520,6 +446,5 @@ export const PLIES: Ply[] = [
   { san: "Nf3", moves: [["g1", "f3"]] },
   { san: "O-O", moves: [["e8", "g8"], ["h8", "f8"]] },
   { san: "O-O", moves: [["e1", "g1"], ["h1", "f1"]] },
-  { san: "d6", moves: [["d7", "d6"]] },
 ];
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
