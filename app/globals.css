@@ -141,7 +141,6 @@ main { position: relative; z-index: 10; }
 /* ---------- Sobre mí: texto que se escribe letra por letra ---------- */
 .story { position: relative; margin-top: 16px; }
 .story p { margin: 0 0 14px; font-size: 15.5px; line-height: 1.62; color: var(--ink-soft); }
-.story p:first-child { font: 500 20px/1.4 var(--font-sans); letter-spacing: -0.015em; color: var(--ink); }
 .story p:last-child { margin-bottom: 0; color: var(--ink); }
 .story .ghost { color: transparent; }
 .story .caret { display: inline-block; width: 2px; height: 1.05em; margin: 0 1px -0.16em; background: var(--accent-line); animation: caret 1s steps(1) infinite; }

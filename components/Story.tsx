@@ -21,17 +21,15 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
   const [n, setN] = useState(total); // HTML estático: texto completo
   const boxRef = useRef<HTMLDivElement>(null);
   const caretRef = useRef<HTMLSpanElement>(null);
-  const first = useRef(true);
+  // el loop lee siempre el valor actual (si cambia el idioma a mitad de camino, arranca de cero sin saltos)
+  const nRef = useRef(n);
+  nRef.current = n;
   const done = n >= total;
 
-  // primera carga: arranca de cero (salvo movimiento reducido); si después cambia el idioma, se muestra entero
+  // cada vez que llega un texto (primera carga o cambio de idioma) se escribe de cero, salvo movimiento reducido.
+  // Ojo: el HTML estático está en español y, si el navegador está en inglés, el idioma cambia apenas monta.
   useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setN(0);
-      return;
-    }
-    setN(total);
+    setN(matchMedia("(prefers-reduced-motion: reduce)").matches ? total : 0);
   }, [paragraphs, total]);
 
   useEffect(() => {
@@ -41,17 +39,17 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
     const ends = new Set<number>(); let acc = 0;
     for (const p of paragraphs) { acc += p.length; ends.add(acc); }
     const flat = paragraphs.join("");
-    let i = n;
     const tick = () => {
       const caret = caretRef.current?.getBoundingClientRect();
       // si bajó más rápido de lo que se escribe (la línea quedó arriba de la pantalla), avance rápido hasta alcanzarlo
-      if (caret && caret.bottom < 0) { i = Math.min(total, i + 9); setN(i); if (i < total) timer = window.setTimeout(tick, 16); return; }
+      if (caret && caret.bottom < 0) { const i = Math.min(total, nRef.current + 9); nRef.current = i; setN(i); if (i < total) timer = window.setTimeout(tick, 16); return; }
       const box = boxRef.current!.getBoundingClientRect();
       const inView = box.top < innerHeight && box.bottom > 0;
       const visible = inView && !document.hidden && !document.documentElement.classList.contains("loading")
         && (!caret || (caret.bottom < innerHeight - 24 && caret.top > 0));
       if (!visible) { timer = window.setTimeout(tick, 200); return; }
-      i++;
+      const i = Math.min(total, nRef.current + 1);
+      nRef.current = i;
       setN(i);
       if (i < total) timer = window.setTimeout(tick, pause(flat[i - 1], ends.has(i)));
     };
