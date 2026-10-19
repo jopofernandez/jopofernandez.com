@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Lang } from "@/lib/content";
 import { PLACES, type Place } from "@/lib/travel";
 import photosById from "@/lib/data/travel-photos.json";
@@ -11,66 +12,59 @@ const PHOTOS = photosById as Record<string, Photo[]>;
 // Máscara de tierra (equirectangular, blanco = tierra), generada con scripts/travel-mask.mjs
 const MASK = { src: "/assets/travel/land.png", lat0: 84, lat1: -60 };
 const RAD = Math.PI / 180;
-// Mercator en "grados": x = longitud, y = merc(latitud). Europa y el Cono Sur se ven con su forma de siempre.
+// Mercator en "grados": x = longitud, y = merc(latitud)
 const merc = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * RAD) / 2)) / RAD;
 const unmerc = (y: number) => (2 * Math.atan(Math.exp(y * RAD)) - Math.PI / 2) / RAD;
 
-type View = { x: number; y: number; k: number }; // centro proyectado + px CSS por grado
-type Cluster = { key: string; ids: string[] };
+const STEP = 5;   // separación de la grilla de puntos (px CSS)
+const DOT = 1.7;  // tamaño de cada punto
 
-const STEP = 5;      // separación de la grilla de puntos (px CSS): fija en pantalla, el mapa se mueve debajo
-const DOT = 1.7;     // tamaño de cada punto
-const R = 20;        // distancia (px) por debajo de la cual los pines se agrupan
-const K_MAX = 220;   // zoom máximo (px por grado)
-const PIN_ZOOM = 16; // zoom mínimo al elegir un lugar
+type View = { x: number; y: number; k: number }; // centro proyectado + px CSS por grado
+type Shot = { place: Place; photo: Photo };
+type Group = { key: string; shots: Shot[]; x: number; y: number };
 
 const proj = (p: Place) => ({ x: p.lon, y: merc(p.lat) });
-const byId = Object.fromEntries(PLACES.map((p) => [p.id, p]));
+const SHOTS: Shot[] = PLACES.flatMap((place) => (PHOTOS[place.id] ?? []).map((photo) => ({ place, photo })));
+const BARE = PLACES.filter((p) => !PHOTOS[p.id]?.length); // lugares sin foto: un punto chico, sin interacción
 
 const TXT = {
-  es: { hint: "Tocá un pin para ver las fotos.", world: "Mundo", soon: "Fotos en camino.", places: (n: number) => `${n} lugares`, map: "Mapa de viajes" },
-  en: { hint: "Tap a pin to see the photos.", world: "World", soon: "Photos coming soon.", places: (n: number) => `${n} places`, map: "Travel map" },
+  es: { map: "Mapa de viajes", open: (n: number) => (n === 1 ? "Ver la foto" : `Ver ${n} fotos`), close: "Cerrar", prev: "Anterior", next: "Siguiente" },
+  en: { map: "Travel map", open: (n: number) => (n === 1 ? "See the photo" : `See ${n} photos`), close: "Close", prev: "Previous", next: "Next" },
 };
 
-/** encuadre que contiene todos los puntos dados, con margen */
-function fit(ids: string[], w: number, h: number, pad = 0.18, minSpan = 6): View {
-  const pts = ids.map((id) => proj(byId[id]));
-  let x0 = Math.min(...pts.map((p) => p.x)), x1 = Math.max(...pts.map((p) => p.x));
-  let y0 = Math.min(...pts.map((p) => p.y)), y1 = Math.max(...pts.map((p) => p.y));
-  const sx = Math.max(x1 - x0, minSpan), sy = Math.max(y1 - y0, minSpan * 0.6);
-  const k = Math.min(K_MAX, (w * (1 - pad * 2)) / sx, (h * (1 - pad * 2)) / sy);
+/** encuadre con los lugares que tienen foto, con margen para las miniaturas */
+function fit(w: number, h: number): View {
+  const pts = (SHOTS.length ? SHOTS.map((s) => s.place) : PLACES).map(proj);
+  const x0 = Math.min(...pts.map((p) => p.x)), x1 = Math.max(...pts.map((p) => p.x));
+  const y0 = Math.min(...pts.map((p) => p.y)), y1 = Math.max(...pts.map((p) => p.y));
+  const k = Math.min((w * 0.8) / (x1 - x0), (h * 0.74) / (y1 - y0));
   return { x: (x0 + x1) / 2, y: (y0 + y1) / 2, k };
 }
 
-/** agrupa los pines que en este zoom quedarían a menos de R px */
-function cluster(view: View): Cluster[] {
-  const out: { ids: string[]; x: number; y: number }[] = [];
-  for (const p of PLACES) {
-    const q = proj(p), sx = q.x * view.k, sy = -q.y * view.k;
-    const c = out.find((o) => Math.hypot(o.x - sx, o.y - sy) < R);
-    if (c) { c.ids.push(p.id); c.x += (sx - c.x) / c.ids.length; c.y += (sy - c.y) / c.ids.length; }
-    else out.push({ ids: [p.id], x: sx, y: sy });
+/** agrupa las fotos que en pantalla quedarían encimadas (como el mapa de Fotos) */
+function group(view: View, w: number, h: number, size: number): Group[] {
+  const out: Group[] = [];
+  for (const s of SHOTS) {
+    const q = proj(s.place), x = w / 2 + (q.x - view.x) * view.k, y = h / 2 - (q.y - view.y) * view.k;
+    const g = out.find((o) => Math.hypot(o.x - x, o.y - y) < size * 0.85);
+    if (g) { g.shots.push(s); g.x += (x - g.x) / g.shots.length; g.y += (y - g.y) / g.shots.length; }
+    else out.push({ key: s.place.id, shots: [s], x, y });
   }
-  return out.map((c) => ({ key: c.ids.join("|"), ids: c.ids }));
+  return out.map((g) => ({ ...g, key: g.shots.map((s) => s.place.id).join("|") }));
 }
 
 export default function TravelMap({ lang }: { lang: Lang }) {
   const t = TXT[lang];
   const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pinsRef = useRef<HTMLDivElement>(null);
   const mask = useRef<{ data: Uint8Array; w: number; h: number } | null>(null);
   const view = useRef<View>({ x: 0, y: 0, k: 1 });
-  const home = useRef<View>({ x: 0, y: 0, k: 1 });
   const size = useRef({ w: 0, h: 0 });
-  const anim = useRef(0);
-  const [clusters, setClusters] = useState<Cluster[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [zoomed, setZoomed] = useState(false);
-  const zoomedRef = useRef(false);
-  useEffect(() => { zoomedRef.current = zoomed; }, [zoomed]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [bare, setBare] = useState<{ id: string; x: number; y: number }[]>([]);
+  const [open, setOpen] = useState<{ shots: Shot[]; from: DOMRect } | null>(null);
 
-  // dibuja la grilla de puntos: cada punto de pantalla se prende si cae sobre tierra
+  // grilla de puntos: cada punto de pantalla se prende si cae sobre tierra
   const draw = useCallback(() => {
     const cv = canvasRef.current, m = mask.current; if (!cv) return;
     const { w, h } = size.current, v = view.current, dpr = Math.min(devicePixelRatio || 1, 2);
@@ -92,58 +86,26 @@ export default function TravelMap({ lang }: { lang: Lang }) {
     }
   }, []);
 
-  // ubica cada pin (o grupo) en pantalla según la vista actual
-  const place = useCallback(() => {
-    const box = pinsRef.current; if (!box) return;
-    const { w, h } = size.current, v = view.current;
-    for (const el of box.querySelectorAll<HTMLElement>("[data-ids]")) {
-      const ids = el.dataset.ids!.split("|");
-      let x = 0, y = 0;
-      for (const id of ids) { const q = proj(byId[id]); x += q.x; y += q.y; }
-      x /= ids.length; y /= ids.length;
-      const px = w / 2 + (x - v.x) * v.k, py = h / 2 - (y - v.y) * v.k;
-      el.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`;
-      el.style.visibility = px < -20 || px > w + 20 || py < -20 || py > h + 20 ? "hidden" : "";
-    }
-  }, []);
-
-  const frame = useCallback(() => { draw(); place(); }, [draw, place]);
-
-  // va a una vista con una transición suave (zoom en escala logarítmica para que no "salte")
-  const goTo = useCallback((to: View, instant = false) => {
-    cancelAnimationFrame(anim.current);
-    setClusters(cluster(to));
-    const from = { ...view.current };
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (instant || reduce) { view.current = to; requestAnimationFrame(frame); return; }
-    const t0 = performance.now(), D = 900;
-    const tick = () => {
-      const q = Math.min(1, (performance.now() - t0) / D), e = q < 0.5 ? 4 * q * q * q : 1 - (-2 * q + 2) ** 3 / 2;
-      const k = Math.exp(Math.log(from.k) + (Math.log(to.k) - Math.log(from.k)) * e);
-      view.current = { x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e, k };
-      frame();
-      if (q < 1) anim.current = requestAnimationFrame(tick);
-    };
-    anim.current = requestAnimationFrame(tick);
-  }, [frame]);
-
-  // tamaño del mapa (y encuadre inicial con todos los lugares)
+  // tamaño, encuadre y grupos según el ancho disponible
   useEffect(() => {
     const box = boxRef.current!, cv = canvasRef.current!;
     const resize = () => {
       const w = box.clientWidth, h = box.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
       size.current = { w, h };
       cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
-      home.current = fit(PLACES.map((p) => p.id), w, h, 0.08, 40);
-      if (!zoomedRef.current) goTo(home.current, true); else frame();
+      view.current = fit(w, h);
+      const thumb = w < 480 ? 38 : 46;
+      setGroups(group(view.current, w, h, thumb));
+      setBare(BARE.map((p) => { const q = proj(p); return { id: p.id, x: w / 2 + (q.x - view.current.x) * view.current.k, y: h / 2 - (q.y - view.current.y) * view.current.k }; }));
+      draw();
     };
     const ro = new ResizeObserver(resize);
     ro.observe(box);
     resize();
-    return () => { ro.disconnect(); cancelAnimationFrame(anim.current); };
-  }, [goTo, frame]);
+    return () => ro.disconnect();
+  }, [draw]);
 
-  // carga la máscara de tierra (una vez) y la pasa a un byte por píxel
+  // máscara de tierra (una vez) y redibujo al cambiar de tema
   useEffect(() => {
     let alive = true;
     const img = new Image();
@@ -154,80 +116,113 @@ export default function TravelMap({ lang }: { lang: Lang }) {
       const px = g.getImageData(0, 0, img.width, img.height).data, data = new Uint8Array(img.width * img.height);
       for (let i = 0; i < data.length; i++) data[i] = px[i * 4] > 127 ? 1 : 0;
       mask.current = { data, w: img.width, h: img.height };
-      frame();
+      draw();
     };
     img.src = MASK.src;
-    // el color de los puntos sigue al tema
     const mo = new MutationObserver(() => draw());
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => { alive = false; mo.disconnect(); };
-  }, [frame, draw]);
-
-  // los pines recién creados se ubican antes de pintarse
-  useEffect(() => { place(); }, [clusters, place]);
-
-  const open = (c: Cluster) => {
-    const { w, h } = size.current;
-    if (c.ids.length > 1) {
-      setSelected(null);
-      setZoomed(true);
-      goTo(fit(c.ids, w, h, 0.2, 1.2));
-      return;
-    }
-    const q = proj(byId[c.ids[0]]);
-    setSelected(c.ids[0]);
-    setZoomed(true);
-    goTo({ x: q.x, y: q.y, k: Math.min(K_MAX, Math.max(view.current.k, PIN_ZOOM)) });
-  };
-  const reset = () => { setSelected(null); setZoomed(false); goTo(home.current); };
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape" && zoomedRef.current) reset(); };
-    addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
-  });
-
-  const sel = selected ? byId[selected] : null;
-  const photos = useMemo(() => (selected ? PHOTOS[selected] ?? [] : []), [selected]);
+  }, [draw]);
 
   return (
     <div className="tm">
+      {/* duotono de las miniaturas: la luminancia de la foto pasa a tinta/papel del tema */}
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <filter id="duo-light" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" />
+          <feComponentTransfer><feFuncR type="table" tableValues="0.086 0.933" /><feFuncG type="table" tableValues="0.204 0.914" /><feFuncB type="table" tableValues="0.157 0.863" /></feComponentTransfer>
+        </filter>
+        <filter id="duo-dark" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" />
+          <feComponentTransfer><feFuncR type="table" tableValues="0.059 0.875" /><feFuncG type="table" tableValues="0.11 0.914" /><feFuncB type="table" tableValues="0.09 0.882" /></feComponentTransfer>
+        </filter>
+      </svg>
       <div className="tm-map" ref={boxRef} role="group" aria-label={t.map}>
         <canvas ref={canvasRef} aria-hidden="true" />
-        <div className="tm-pins" ref={pinsRef}>
-          {clusters.map((c) => {
-            const one = c.ids.length === 1 ? byId[c.ids[0]] : null;
-            const label = one ? `${one.name[lang]}, ${one.country[lang]}` : `${t.places(c.ids.length)}: ${c.ids.map((id) => byId[id].name[lang]).join(", ")}`;
-            return (
-              <button key={c.key} data-ids={c.key} className={`tm-pin${one ? "" : " cl"}`} aria-label={label} aria-pressed={one ? selected === one.id : undefined} onClick={() => open(c)}>
-                <i>{one ? null : c.ids.length}</i>
-                {one && <span className="lb">{one.name[lang]}</span>}
-              </button>
-            );
-          })}
-        </div>
-        {zoomed && <button className="tm-reset" onClick={reset}>← {t.world}</button>}
+        {bare.map((b) => <i key={b.id} className="tm-dot" style={{ transform: `translate(${b.x}px, ${b.y}px)` }} />)}
+        {groups.map((g) => (
+          <button
+            key={g.key}
+            className="tm-ph"
+            data-n={Math.min(g.shots.length, 3)}
+            style={{ transform: `translate(${g.x}px, ${g.y}px)` }}
+            aria-label={t.open(g.shots.length)}
+            onClick={(e) => setOpen({ shots: g.shots, from: (e.currentTarget.querySelector(".ph[data-depth='0']") as HTMLElement).getBoundingClientRect() })}
+          >
+            {g.shots.slice(0, 3).reverse().map((s, i, arr) => (
+              <span key={s.place.id} className="ph" data-depth={arr.length - 1 - i}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="duo" src={s.photo.thumb} alt="" loading="lazy" decoding="async" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="col" src={s.photo.thumb} alt="" loading="lazy" decoding="async" />
+              </span>
+            ))}
+            {g.shots.length > 1 && <b className="count">{g.shots.length}</b>}
+          </button>
+        ))}
       </div>
-      <div className="tm-info" aria-live="polite">
-        {sel ? (
-          <>
-            <div className="tm-head">
-              <span className="title">{sel.name[lang]}</span>
-              <span className="meta">{sel.country[lang]}{sel.years ? ` · ${sel.years.join(", ")}` : ""}</span>
-            </div>
-            {photos.length ? (
-              <div className="strip">
-                {photos.map((p, i) => (
-                  <a key={p.src} href={p.src} target="_blank" rel="noreferrer">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.thumb} width={p.w} height={p.h} alt={`${sel.name[lang]} ${i + 1}`} loading="lazy" decoding="async" />
-                  </a>
-                ))}
-              </div>
-            ) : <p className="tm-hint">{t.soon}</p>}
-          </>
-        ) : <p className="tm-hint">{t.hint}</p>}
+      {/* el visor va al body: la card tiene backdrop-filter y un position: fixed adentro quedaría atado a ella */}
+      {open && createPortal(<Viewer shots={open.shots} from={open.from} lang={lang} onClose={() => setOpen(null)} />, document.body)}
+    </div>
+  );
+}
+
+/** Foto a pantalla completa: crece desde la miniatura y se pasan las del grupo como un carrusel. */
+function Viewer({ shots, from, lang, onClose }: { shots: Shot[]; from: DOMRect; lang: Lang; onClose: () => void }) {
+  const t = TXT[lang];
+  const [i, setI] = useState(0);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const touch = useRef<number | null>(null);
+  const n = shots.length, s = shots[i];
+  const go = useCallback((d: number) => setI((v) => (v + d + n) % n), [n]);
+
+  // tamaño final: la foto entera dentro del 86% × 80% de la ventana
+  const ratio = s.photo.w / s.photo.h;
+  const maxW = Math.min(innerWidth * 0.86, 1100), maxH = innerHeight * 0.8;
+  const fw = Math.min(maxW, maxH * ratio), fh = fw / ratio;
+
+  // zoom de entrada: de la miniatura a su lugar final (FLIP)
+  useLayoutEffect(() => {
+    const el = imgRef.current; if (!el) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const to = el.getBoundingClientRect();
+    const sx = from.width / to.width, sy = from.height / to.height;
+    const dx = from.left + from.width / 2 - (to.left + to.width / 2), dy = from.top + from.height / 2 - (to.top + to.height / 2);
+    el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, borderRadius: "8px" }, { transform: "none", borderRadius: "12px" }], { duration: 480, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // teclado (antes que el de la página, que usa ← → para cambiar de sección) y scroll bloqueado
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight") go(1);
+      else if (e.key === "ArrowLeft") go(-1);
+      else return;
+      e.preventDefault(); e.stopImmediatePropagation();
+    };
+    addEventListener("keydown", onKey, true);
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => { removeEventListener("keydown", onKey, true); document.documentElement.style.overflow = prev; };
+  }, [go, onClose]);
+
+  return (
+    <div className="tm-view" role="dialog" aria-modal="true" onClick={onClose}
+      onTouchStart={(e) => { touch.current = e.touches[0].clientX; }}
+      onTouchEnd={(e) => { if (touch.current === null) return; const d = e.changedTouches[0].clientX - touch.current; touch.current = null; if (Math.abs(d) > 40) go(d < 0 ? 1 : -1); }}>
+      <div className="tm-photo" ref={imgRef} style={{ width: fw, height: fh, backgroundImage: `url(${s.photo.thumb})` }} onClick={(e) => { e.stopPropagation(); if (n > 1) go(1); }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img key={s.photo.src} src={s.photo.src} alt={`${s.place.name[lang]}, ${s.place.country[lang]}`} onLoad={(e) => e.currentTarget.classList.add("in")} />
       </div>
+      {n > 1 && (
+        <>
+          <button className="tm-nav prev" aria-label={t.prev} onClick={(e) => { e.stopPropagation(); go(-1); }}>←</button>
+          <button className="tm-nav next" aria-label={t.next} onClick={(e) => { e.stopPropagation(); go(1); }}>→</button>
+          <div className="tm-dots" aria-hidden="true">{shots.map((x, k) => <i key={x.place.id} className={k === i ? "on" : ""} />)}</div>
+        </>
+      )}
+      <button className="tm-close" aria-label={t.close} onClick={onClose}>×</button>
     </div>
   );
 }

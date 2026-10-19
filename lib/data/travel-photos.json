@@ -1,1 +1,130 @@
-{}
+{
+  "amsterdam": [
+    {
+      "src": "/assets/travel/amsterdam/01.webp",
+      "thumb": "/assets/travel/amsterdam/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "barcelona": [
+    {
+      "src": "/assets/travel/barcelona/01.webp",
+      "thumb": "/assets/travel/barcelona/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "berlin": [
+    {
+      "src": "/assets/travel/berlin/01.webp",
+      "thumb": "/assets/travel/berlin/01-s.webp",
+      "w": 320,
+      "h": 240
+    }
+  ],
+  "corfu": [
+    {
+      "src": "/assets/travel/corfu/01.webp",
+      "thumb": "/assets/travel/corfu/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "croatia": [
+    {
+      "src": "/assets/travel/croatia/01.webp",
+      "thumb": "/assets/travel/croatia/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "leipzig": [
+    {
+      "src": "/assets/travel/leipzig/01.webp",
+      "thumb": "/assets/travel/leipzig/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "madrid": [
+    {
+      "src": "/assets/travel/madrid/01.webp",
+      "thumb": "/assets/travel/madrid/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "mallorca": [
+    {
+      "src": "/assets/travel/mallorca/01.webp",
+      "thumb": "/assets/travel/mallorca/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "manchester": [
+    {
+      "src": "/assets/travel/manchester/01.webp",
+      "thumb": "/assets/travel/manchester/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "morano": [
+    {
+      "src": "/assets/travel/morano/01.webp",
+      "thumb": "/assets/travel/morano/01-s.webp",
+      "w": 135,
+      "h": 240
+    }
+  ],
+  "naples": [
+    {
+      "src": "/assets/travel/naples/01.webp",
+      "thumb": "/assets/travel/naples/01-s.webp",
+      "w": 135,
+      "h": 240
+    }
+  ],
+  "puglia": [
+    {
+      "src": "/assets/travel/puglia/01.webp",
+      "thumb": "/assets/travel/puglia/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "rome": [
+    {
+      "src": "/assets/travel/rome/01.webp",
+      "thumb": "/assets/travel/rome/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "salta": [
+    {
+      "src": "/assets/travel/salta/01.webp",
+      "thumb": "/assets/travel/salta/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "sao-paulo": [
+    {
+      "src": "/assets/travel/sao-paulo/01.webp",
+      "thumb": "/assets/travel/sao-paulo/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ],
+  "sp-north-coast": [
+    {
+      "src": "/assets/travel/sp-north-coast/01.webp",
+      "thumb": "/assets/travel/sp-north-coast/01-s.webp",
+      "w": 180,
+      "h": 240
+    }
+  ]
+}
