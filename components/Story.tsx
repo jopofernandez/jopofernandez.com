@@ -9,7 +9,7 @@ const VOICE = voices as unknown as Record<Lang, Voice>;
 
 const TXT = {
   es: { all: "Mostrar todo", listen: "¿Te lo leo?", pause: "Pausar", resume: "Seguir", speed: "Velocidad de la voz:" },
-  en: { all: "Show all", listen: "Want me to read it?", pause: "Pause", resume: "Resume", speed: "Voice speed:" },
+  en: { all: "Show all", listen: "Shall I read it?", pause: "Pause", resume: "Resume", speed: "Voice speed:" },
 };
 
 const RATES = [1, 1.25, 1.5, 2];
@@ -143,6 +143,14 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
   let offset = 0;
   return (
     <div className="story" ref={boxRef}>
+      {/* arriba a la derecha de la card, a la altura del título: voz y velocidad */}
+      <div className="story-audio">
+        <button className="story-listen" data-state={voice} onClick={toggleVoice} aria-pressed={voice === "playing"}>
+          {voice === "playing" ? <span className="eq" aria-hidden="true"><i /><i /><i /></span> : <IconVoice />}
+          {voice === "playing" ? t.pause : voice === "paused" ? t.resume : t.listen}
+        </button>
+        <button className="story-rate" onClick={nextRate} aria-label={`${t.speed} ${rate}x`}>{rate}x</button>
+      </div>
       {/* solo lo ya escrito ocupa lugar: la card crece con el texto (desde un alto mínimo, en CSS) */}
       <div className="story-text" aria-hidden="true">
         {paragraphs.map((p, k) => {
@@ -159,15 +167,8 @@ export default function Story({ paragraphs, lang }: { paragraphs: string[]; lang
         })}
       </div>
       <div className="sr-only">{paragraphs.map((p, k) => <p key={k}>{p}</p>)}</div>
-      {/* barra fija abajo mientras se lee: voz, velocidad y mostrar todo */}
-      <div className="story-bar">
-        <button className="story-listen" data-state={voice} onClick={toggleVoice} aria-pressed={voice === "playing"}>
-          {voice === "playing" ? <span className="eq" aria-hidden="true"><i /><i /><i /></span> : <IconVoice />}
-          {voice === "playing" ? t.pause : voice === "paused" ? t.resume : t.listen}
-        </button>
-        <button className="story-rate" onClick={nextRate} aria-label={`${t.speed} ${rate}x`}>{rate}x</button>
-        {!done && <button className="story-all" onClick={() => setN(total)}>{t.all} ↓</button>}
-      </div>
+      {/* abajo, fijo mientras se lee: mostrar todo */}
+      {!done && <div className="story-bar"><button className="story-all" onClick={() => setN(total)}>{t.all} ↓</button></div>}
     </div>
   );
 }
